@@ -13,9 +13,11 @@ namespace C22_Ex02
         private char[,] m_MatrixGameBoard;
         private int[] m_RandomLettersCounter;
 
-        public MemoryGameBoard()
+        public MemoryGameBoard(int i_InputRows, int i_InputColumns)
         {
-            m_MatrixGameBoard = new char[m_NumOfColumns,m_NumOfRows];
+            m_NumOfRows = i_InputRows;
+            m_NumOfColumns = i_InputColumns;
+            m_MatrixGameBoard = new char[m_NumOfRows,m_NumOfColumns];
             m_RandomLettersCounter = new int[m_NumOfColumns * m_NumOfRows / 2];
             createRandomMatrix();
         }
@@ -26,23 +28,34 @@ namespace C22_Ex02
             Random rndCharForMatrix = new Random();
             char randomChar;
 
-            for (int currentColumn = 0; currentColumn < m_NumOfColumns ; currentColumn++)
-            {
-                for (int currentRow = 0; currentRow < m_NumOfRows ; currentRow++)
+            for (int currentRow = 0; currentRow < m_NumOfRows; currentRow++)
+            { 
+                for (int currentColumn = 0; currentColumn < m_NumOfColumns; currentColumn++)
                 {
-                    while (m_MatrixGameBoard[currentColumn, currentRow] == '\0')
+                    while (m_MatrixGameBoard[currentRow, currentColumn] == '\0')
                     {
                         randomChar = (char)rndCharForMatrix.Next(65, 65 + (m_NumOfColumns * m_NumOfRows / 2));
 
-                        if (m_RandomLettersCounter[(int)randomChar] < 2)
+                        if (m_RandomLettersCounter[((int)randomChar) - 65] < 2)
                         {
-                            m_RandomLettersCounter[(int)randomChar]++;
-                            m_MatrixGameBoard[currentColumn, currentRow] = randomChar;
+                            m_RandomLettersCounter[((int)randomChar) - 65]++;
+                            m_MatrixGameBoard[currentRow, currentColumn] = randomChar;
                             counterOfCorrectValuesInMatrix++;
                         }
                     }
                 }
             }
+
+            //print test
+            for (int i = 0; i < m_NumOfRows; i++)
+            {
+                for (int j = 0; j < m_NumOfColumns; j++)
+                {
+                    Console.Write(string.Format("{0} ", m_MatrixGameBoard[i, j]));
+                }
+                Console.Write(Environment.NewLine + Environment.NewLine);
+            }
+            Console.ReadLine();
         }
     }
 }

@@ -1,0 +1,7 @@
+C:\Users\Owner\Desktop\healthy-life\MemoryGame\C22 Ex02 Natalie 208504779 Ofek 206448797\C22_Ex02\bin\Debug\C22_Ex02.exe.config
+C:\Users\Owner\Desktop\healthy-life\MemoryGame\C22 Ex02 Natalie 208504779 Ofek 206448797\C22_Ex02\bin\Debug\C22_Ex02.exe
+C:\Users\Owner\Desktop\healthy-life\MemoryGame\C22 Ex02 Natalie 208504779 Ofek 206448797\C22_Ex02\bin\Debug\C22_Ex02.pdb
+C:\Users\Owner\Desktop\healthy-life\MemoryGame\C22 Ex02 Natalie 208504779 Ofek 206448797\C22_Ex02\obj\Debug\C22_Ex02.csproj.AssemblyReference.cache
+C:\Users\Owner\Desktop\healthy-life\MemoryGame\C22 Ex02 Natalie 208504779 Ofek 206448797\C22_Ex02\obj\Debug\C22_Ex02.csproj.CoreCompileInputs.cache
+C:\Users\Owner\Desktop\healthy-life\MemoryGame\C22 Ex02 Natalie 208504779 Ofek 206448797\C22_Ex02\obj\Debug\C22_Ex02.exe
+C:\Users\Owner\Desktop\healthy-life\MemoryGame\C22 Ex02 Natalie 208504779 Ofek 206448797\C22_Ex02\obj\Debug\C22_Ex02.pdb
