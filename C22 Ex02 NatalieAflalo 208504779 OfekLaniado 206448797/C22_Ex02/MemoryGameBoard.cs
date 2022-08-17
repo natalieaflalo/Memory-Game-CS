@@ -11,6 +11,7 @@ namespace C22_Ex02
         private int m_NumOfColumns;
         private int m_NumOfRows;
         private char[,] m_MatrixGameBoard;
+        private bool[,] m_FlippedBlocksMatrix;
         private int[] m_RandomLettersCounter;
 
         public MemoryGameBoard(int i_InputRows, int i_InputColumns)
@@ -18,6 +19,7 @@ namespace C22_Ex02
             m_NumOfRows = i_InputRows;
             m_NumOfColumns = i_InputColumns;
             m_MatrixGameBoard = new char[m_NumOfRows,m_NumOfColumns];
+            m_FlippedBlocksMatrix = new bool[m_NumOfRows, m_NumOfColumns]
             m_RandomLettersCounter = new int[m_NumOfColumns * m_NumOfRows / 2];
             createRandomMatrix();
         }

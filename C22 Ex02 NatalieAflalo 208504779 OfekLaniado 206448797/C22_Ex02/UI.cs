@@ -17,7 +17,7 @@ namespace C22_Ex02
             Console.WriteLine("Enter number of columns:{0}", Environment.NewLine);
             string stringNumOfColumns = Console.ReadLine();
 
-            while ((!isLegalInput(stringNumOfRows, ref numOfRows)) || (!isLegalInput(stringNumOfColumns, ref numOfColumns)))
+            while ((!LogicValidationsForUI.isLegalSizeOfMatrix(stringNumOfRows, ref numOfRows)) || (!LogicValidationsForUI.isLegalSizeOfMatrix(stringNumOfColumns, ref numOfColumns)))
             {
                 Console.WriteLine("Input is not a legal. Please try again");
                 Console.WriteLine("Enter number of rows:{0}", Environment.NewLine);
@@ -25,23 +25,28 @@ namespace C22_Ex02
                 Console.WriteLine("Enter number of columns:{0}", Environment.NewLine);
                 stringNumOfColumns = Console.ReadLine();
             }
+
             MemoryGameBoard game = new MemoryGameBoard(numOfRows, numOfColumns);
+
+            //ask if playing with computer or player
+            //ask for name\s
+            //ask for block ID
+            //check isValidBlockID and flip it
+            //ask again and check again
         }
 
-        private static bool isLegalInput(string i_StringNumber, ref int io_ValidNumber)
-        {
-            bool isLegal = false;
+        //private static void playerTurn()
+        //{
+        //  ask for block ID
+        //  check isValidBlockID and flip it
+        //  ask again and check again
 
-            if (int.TryParse(i_StringNumber, out io_ValidNumber) && io_ValidNumber >= 0)
-            {
-                isLegal = true;
-            }
+        //private static void computerTurn()
+        // randomly choose valid block and 
 
-            
-            return isLegal;
-        }
+        //private static bool isValidBlockID()
 
-        /*private static void QuitGame() 
+        private static void QuitGame() 
         {
             if (userGuessInput.Equals("Q") || userGuessInput.Equals("q"))
             {
@@ -49,6 +54,6 @@ namespace C22_Ex02
                 break;
             }
         }
-        */
+        
     }
 }
