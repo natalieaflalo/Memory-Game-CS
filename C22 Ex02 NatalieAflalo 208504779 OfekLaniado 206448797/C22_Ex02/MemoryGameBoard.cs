@@ -59,5 +59,12 @@ namespace C22_Ex02
             }
             Console.ReadLine();
         }
+
+        public string GetBoardString()
+        {
+            string boardPrintingString = "";
+
+            return boardPrintingString;
+        }
     }
 }

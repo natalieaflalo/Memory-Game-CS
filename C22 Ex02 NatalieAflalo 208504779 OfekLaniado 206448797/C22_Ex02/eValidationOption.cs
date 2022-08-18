@@ -11,7 +11,11 @@ namespace C22_Ex02
         Valid,
         NotANumber,
         OddNumber,
-        NegativeNumber,
-        TooManyBlocks,
+        BoardTooBig,
+        BoardTooSmall,
+        NotInFormat,
+        Undefined,
+
+
     }
 }

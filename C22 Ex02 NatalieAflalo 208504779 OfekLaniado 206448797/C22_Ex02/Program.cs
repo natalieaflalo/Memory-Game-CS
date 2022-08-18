@@ -10,7 +10,7 @@ namespace C22_Ex02
     {
         public static void Main()
         {
-            UI.StartGame();
+            UI.PlayGame();
         }
     }
 }
