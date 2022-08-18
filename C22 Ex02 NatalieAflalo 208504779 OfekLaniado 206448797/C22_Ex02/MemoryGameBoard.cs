@@ -19,7 +19,7 @@ namespace C22_Ex02
             m_NumOfRows = i_InputRows;
             m_NumOfColumns = i_InputColumns;
             m_MatrixGameBoard = new char[m_NumOfRows,m_NumOfColumns];
-            m_FlippedBlocksMatrix = new bool[m_NumOfRows, m_NumOfColumns]
+            m_FlippedBlocksMatrix = new bool[m_NumOfRows, m_NumOfColumns];
             m_RandomLettersCounter = new int[m_NumOfColumns * m_NumOfRows / 2];
             createRandomMatrix();
         }

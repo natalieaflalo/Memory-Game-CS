@@ -8,6 +8,7 @@ namespace C22_Ex02
 {
     public static class UI
     {
+        private static MemoryGameBoard game;
         public static void StartGame()
         {
             int numOfRows = 0;
@@ -26,34 +27,65 @@ namespace C22_Ex02
                 stringNumOfColumns = Console.ReadLine();
             }
 
-            MemoryGameBoard game = new MemoryGameBoard(numOfRows, numOfColumns);
+            game = new MemoryGameBoard(numOfRows, numOfColumns);
+            string playerInput;
 
             //ask if playing with computer or player
             //ask for name\s
+            do
+            {
+                playerInput = Console.ReadLine();
+                playerTurn(playerInput);
+
+            }
+            while (playerInput != "Q" || playerInput != "q");
             //ask for block ID
             //check isValidBlockID and flip it
             //ask again and check again
         }
 
-        //private static void playerTurn()
-        //{
-        //  ask for block ID
-        //  check isValidBlockID and flip it
-        //  ask again and check again
+        private static void playerTurn(string i_PlayerInput)
+        {
+            bool isValidTurn = false;
+            if(i_PlayerInput != "Q" || i_PlayerInput != "q")
+            {
+                Console.WriteLine("Game finished.");
+            }
+            else
+            {
+                isValidTurn = LogicForUI.isValidBlockID(i_PlayerInput);
+                if(isValidTurn)
+                {
+                    Console.WriteLine("Next player turn.");
+                }
+            }
+            //  ask for block ID
+            //  check isValidBlockID and flip it
+            //  ask again and check again
+            
 
-        //private static void computerTurn()
-        // randomly choose valid block and 
+        }
+
+        private static void computerTurn()
+        {
+            // randomly choose valid block and check that it's not chosen already
+        }
+
 
         //private static bool isValidBlockID()
 
-        private static void QuitGame() 
-        {
-            if (userGuessInput.Equals("Q") || userGuessInput.Equals("q"))
-            {
-                game.QuitGame();
-                break;
-            }
-        }
-        
+
+        /// <summary>
+        /// private static void QuitGame() 
+        ///{
+        ///if (userGuessInput.Equals("Q") || userGuessInput.Equals("q"))
+        ///{
+        ///game.QuitGame();
+        ///break;
+        ///}
+        ///}
+        /// </summary>
+
+
     }
 }

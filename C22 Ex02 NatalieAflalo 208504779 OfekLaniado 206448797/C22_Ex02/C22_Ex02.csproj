@@ -37,7 +37,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="eValidationOption.cs" />
-    <Compile Include="LogicValidationsForUI.cs" />
+    <Compile Include="LogicForUI.cs" />
     <Compile Include="MemoryGameBoard.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />

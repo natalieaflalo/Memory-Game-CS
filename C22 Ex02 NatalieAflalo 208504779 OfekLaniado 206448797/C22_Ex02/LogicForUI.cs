@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace C22_Ex02
 {
-    public class LogicValidationsForUI
+    public class LogicForUI
     {
         public static bool isLegalSizeOfMatrix(string i_StringNumber, ref int io_ValidNumber)
         {
@@ -17,8 +17,8 @@ namespace C22_Ex02
                 isLegal = true;
             }
 
-
             return isLegal;
         }
+
     }
 }
