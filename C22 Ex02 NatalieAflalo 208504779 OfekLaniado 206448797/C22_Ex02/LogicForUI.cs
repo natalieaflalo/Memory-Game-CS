@@ -6,8 +6,27 @@ using System.Threading.Tasks;
 
 namespace C22_Ex02
 {
-    public class LogicForUI
+    public static class LogicForUI
     {
+        private static Player s_FirstPlayer;
+        private static Player s_SecondPlayer;
+
+        public static void CreatePlayers(string i_FirstName, string i_SecondName)
+        {
+            s_FirstPlayer = new Player(i_FirstName);
+            s_SecondPlayer = new Player(i_SecondName);
+        }
+
+        public static Player GetFirstPlayer()
+        {
+            return s_FirstPlayer;
+        }
+
+        public static Player GetSecondPlayer()
+        {
+            return s_SecondPlayer;
+        }
+
         public static bool isLegalSizeOfMatrix(char i_CharRows, char i_CharColumns, ref int o_NumberOfRows, ref int o_NumberOfColumns, out eValidationOption o_ValidationCode)
         {
             bool isLegal = false;
@@ -53,21 +72,26 @@ namespace C22_Ex02
 
         public static bool IsGoodPair(MemoryGameBoard i_GameBoard, int i_FirstBlockID, int i_SecondBlockID)
         {
-            if(i_GameBoard.GetMatrixGameBoard()[i_FirstBlockID/10,i_FirstBlockID%10] == i_GameBoard.GetMatrixGameBoard()[i_SecondBlockID / 10, i_SecondBlockID % 10])
-            {
-                return true;
-            }
-
-            return false;
+            return i_GameBoard.GetMatrixGameBoard()[i_FirstBlockID / 10, i_FirstBlockID % 10] == i_GameBoard.GetMatrixGameBoard()[i_SecondBlockID / 10, i_SecondBlockID % 10];
         }
 
         public static bool IsAnUnflippedBlock(MemoryGameBoard i_GameBoard, int i_BlockID)
         {
-            if(i_GameBoard.GetMatrixFlippedBlocks()[i_BlockID/10,i_BlockID%10])
+            return !i_GameBoard.GetMatrixFlippedBlocks()[i_BlockID / 10, i_BlockID % 10];
+        }
+
+        public static string GetGameResult()
+        {
+            if(s_FirstPlayer.GetScore() > s_SecondPlayer.GetScore())
             {
-                return false;
+                return string.Format("{0} wins", s_FirstPlayer.GetName());
             }
-            return true;
+            if (s_FirstPlayer.GetScore() < s_SecondPlayer.GetScore())
+            {
+                return string.Format("{0} wins", s_SecondPlayer.GetName());
+            }
+
+            return "Tie";
         }
     }
 }

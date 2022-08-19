@@ -9,29 +9,31 @@ namespace C22_Ex02
     public static class UI
     {
         private static MemoryGameBoard s_Game;
+        private static bool s_IsFirstGame = true;
+        private static bool s_IsPlayingAgainstComputer;
 
         public static void PlayGame()
         {
             int numOfRows = 0;
             int numOfColumns = 0;
-            Player firstPlayer;
-            Player secondPlayer;
 
-            Console.WriteLine("Welcome to Memory Game! {0}Enter your name:", Environment.NewLine);
-            string firstPlayerName = Console.ReadLine();
-            bool isPlayingAgainstComputer = playingAgainstComputer();
+            if(s_IsFirstGame)
+            {
+                Console.WriteLine("Welcome to Memory Game! {0}Enter your name:", Environment.NewLine);
+                string firstPlayerName = Console.ReadLine();
+                s_IsPlayingAgainstComputer = playingAgainstComputer();
 
-            if (isPlayingAgainstComputer)
-            {
-                firstPlayer = new Player(firstPlayerName);
-                secondPlayer = new Player("Computer");
-            }
-            else
-            {
-                firstPlayer = new Player(firstPlayerName);
-                Console.WriteLine("Enter second player name:");
-                string secondPlayerName = Console.ReadLine();
-                secondPlayer = new Player(secondPlayerName);
+                if (s_IsPlayingAgainstComputer)
+                {
+                    LogicForUI.CreatePlayers(firstPlayerName, "Computer");
+                }
+                else
+                {
+                    Console.WriteLine("Enter second player name:");
+                    string secondPlayerName = Console.ReadLine();
+
+                    LogicForUI.CreatePlayers(firstPlayerName, secondPlayerName);
+                }
             }
 
             boardSizeCheck(ref numOfRows, ref numOfColumns);
@@ -43,9 +45,9 @@ namespace C22_Ex02
             {
                 if(isFirstPlayerTurn)
                 {
-                    if(playerTurn(firstPlayer.GetName(), numOfRows, numOfColumns, ref finishGame))
+                    if(playerTurn(LogicForUI.GetFirstPlayer().GetName(), numOfRows, numOfColumns, ref finishGame))
                     {
-                        firstPlayer.UpdateScore();
+                        LogicForUI.GetFirstPlayer().UpdateScore();
                     }
                     else
                     {
@@ -54,15 +56,15 @@ namespace C22_Ex02
                 }
                 else
                 {
-                    if(isPlayingAgainstComputer)
+                    if(s_IsPlayingAgainstComputer)
                     {
                         LogicForUI.ComputerTurn();
                     }
                     else
                     {
-                        if(playerTurn(secondPlayer.GetName(), numOfRows, numOfColumns, ref finishGame))
+                        if(playerTurn(LogicForUI.GetSecondPlayer().GetName(), numOfRows, numOfColumns, ref finishGame))
                         {
-                            secondPlayer.UpdateScore();
+                            LogicForUI.GetSecondPlayer().UpdateScore();
                         }
                         else
                         {
@@ -96,6 +98,7 @@ namespace C22_Ex02
                 }
             }
             while (computerOrPlayer != "P" || computerOrPlayer != "C");
+
             return isPlayingAgainsComputer;
         }
 
@@ -169,7 +172,7 @@ namespace C22_Ex02
 
             do
             {
-                Console.WriteLine("{0} Turn!{1}Please choose card number {2} to flip.{1}If you want to finish the game press q or Q{1}If you want to keep playing, enter block ID in (Column Upper Case Letter)(Row Number) format (Example- A2):", i_PlayerName, Environment.NewLine, flipTurnNumber);
+                Console.WriteLine("{0} Turn!{1}Please choose card number {2} to flip.{1}If you want to finish the game enter q or Q{1}If you want to keep playing, enter block ID in (Column Upper Case Letter)(Row Number) format (Example- A2):", i_PlayerName, Environment.NewLine, flipTurnNumber);
                 playerInput = Console.ReadLine();
                 if (playerInput != "Q" || playerInput != "q")
                 {
@@ -183,11 +186,19 @@ namespace C22_Ex02
                         s_Game.FlipOrUnflipBlock(playedBlockID[flipTurnNumber-1], true);
                         if (flipTurnNumber == 2)
                         {
-                            if(LogicForUI.IsGoodPair(s_Game, playedBlockID[0], playedBlockID[1]))
-                            {
-                                reutrn true;
-                            }
                             isFinishTurn = true;
+                            if (LogicForUI.IsGoodPair(s_Game, playedBlockID[0], playedBlockID[1]))
+                            {
+                                if(s_Game.GetIsAllBlocksFlipped())
+                                {
+
+                                }
+                                return true;
+                            }
+                            else
+                            {
+                                return false;
+                            }
                         }
                         else
                         {
@@ -201,10 +212,8 @@ namespace C22_Ex02
                 }
             }
             while (!o_FinishGame || !isFinishTurn);
-            
-            //  ask for block ID
-            //  check isValidBlockID and flip it
-            //  ask again and check again
+
+            return false;
         }
 
         private static bool isValidBlockID(string i_PlayerInput, int i_NumOfRows, int i_NumOfColumns, out eValidationOption o_ValidationCode)
@@ -257,19 +266,14 @@ namespace C22_Ex02
             {
                 return blockIDNumber;
             }
+
             return 0;
         }
-        /// <summary>
-        /// private static void QuitGame() 
-        ///{
-        ///if (userGuessInput.Equals("Q") || userGuessInput.Equals("q"))
-        ///{
-        ///game.QuitGame();
-        ///break;
-        ///}
-        ///}
-        /// </summary>
 
-
+        private static void doneGame()
+        {
+            Console.WriteLine("Game Over!{0}The result is: {1} If you want to finish the game enter q or Q:", Environment.NewLine, LogicForUI.GetGameResult());
+            string playerInput = Console.ReadLine();
+        }
     }
 }

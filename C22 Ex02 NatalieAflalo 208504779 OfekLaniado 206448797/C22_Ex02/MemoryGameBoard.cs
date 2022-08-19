@@ -48,17 +48,6 @@ namespace C22_Ex02
                     }
                 }
             }
-
-            //print test
-            for (int i = 0; i < m_NumOfRows; i++)
-            {
-                for (int j = 0; j < m_NumOfColumns; j++)
-                {
-                    Console.Write(string.Format("{0} ", m_MatrixGameBoard[i, j]));
-                }
-                Console.Write(Environment.NewLine + Environment.NewLine);
-            }
-            Console.ReadLine();
         }
 
         public string GetBoardString()
@@ -81,6 +70,7 @@ namespace C22_Ex02
         public void FlipOrUnflipBlock(int i_MatrixIndex, bool i_IsFlip)
         {
             m_FlippedBlocksMatrix[i_MatrixIndex / 10, i_MatrixIndex % 10] = i_IsFlip;
+            isAllBlocksFlipped();
         }
 
         private void isAllBlocksFlipped()
@@ -101,6 +91,8 @@ namespace C22_Ex02
 
         public bool GetIsAllBlocksFlipped()
         {
+            isAllBlocksFlipped();
+
             return m_IsAllBlocksFlipped;
         }
     }
