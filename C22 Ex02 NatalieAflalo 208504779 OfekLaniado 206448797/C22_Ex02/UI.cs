@@ -43,7 +43,14 @@ namespace C22_Ex02
             {
                 if(isFirstPlayerTurn)
                 {
-                    playerTurn(firstPlayer.GetName(), numOfRows, numOfColumns, ref finishGame);
+                    if(playerTurn(firstPlayer.GetName(), numOfRows, numOfColumns, ref finishGame))
+                    {
+                        firstPlayer.UpdateScore();
+                    }
+                    else
+                    {
+                        isFirstPlayerTurn = false;
+                    }
                 }
                 else
                 {
@@ -53,7 +60,14 @@ namespace C22_Ex02
                     }
                     else
                     {
-                        playerTurn(secondPlayer.GetName(), numOfRows, numOfColumns, ref finishGame);
+                        if(playerTurn(secondPlayer.GetName(), numOfRows, numOfColumns, ref finishGame))
+                        {
+                            secondPlayer.UpdateScore();
+                        }
+                        else
+                        {
+                            isFirstPlayerTurn = true;
+                        }
                     }
                 }
             }
@@ -116,37 +130,41 @@ namespace C22_Ex02
             switch(validationCode)
             {
                 case eValidationOption.NotANumber:
-                    Console.WriteLine("The Input is not a number.{0}", Environment.NewLine);
+                    Console.WriteLine("The input is not a number.{0}", Environment.NewLine);
                     break;
                 case eValidationOption.OddNumber:
-                    Console.WriteLine("The Input is not an even size.{0}", Environment.NewLine);
+                    Console.WriteLine("The Ininputput is not an even size.{0}", Environment.NewLine);
                     break;
                 case eValidationOption.BoardTooBig:
-                    Console.WriteLine("The Input is larger than 6X6.{0}", Environment.NewLine);
+                    Console.WriteLine("The input is larger than 6X6.{0}", Environment.NewLine);
                     break;
                 case eValidationOption.BoardTooSmall:
-                    Console.WriteLine("The Input is smaller than 4X4.{0}", Environment.NewLine);
+                    Console.WriteLine("The input is smaller than 4X4.{0}", Environment.NewLine);
                     break;
                 case eValidationOption.NotInSizeFormat:
-                    Console.WriteLine("The Input is not in (rows)X(columns) format.{0}", Environment.NewLine);
+                    Console.WriteLine("The input is not in (rows)X(columns) format.{0}", Environment.NewLine);
                     break;
                 case eValidationOption.BadColumnLetter:
-                    Console.WriteLine("The Input for the column is not an upper case letter column on the board.{0}", Environment.NewLine);
+                    Console.WriteLine("The input for the column is not an upper case letter column on the board.{0}", Environment.NewLine);
                     break;
                 case eValidationOption.BadRowNumber:
-                    Console.WriteLine("The Input for the row is not a row number on the board.{0}", Environment.NewLine);
+                    Console.WriteLine("The input for the row is not a row number on the board.{0}", Environment.NewLine);
                     break;
                 case eValidationOption.NotInBlockFormat:
-                    Console.WriteLine("The Input is not in (Column Upper Case Letter)(Row Number) format.{0}", Environment.NewLine);
+                    Console.WriteLine("The input is not in (Column Upper Case Letter)(Row Number) format.{0}", Environment.NewLine);
+                    break;
+                case eValidationOption.BlockAlreadyFlipped:
+                    Console.WriteLine("The block is already flipped, Choose a non flipped block.{0}", Environment.NewLine);
                     break;
             }
         }
 
-        private static void playerTurn(string i_PlayerName, int i_NumOfRows, int i_NumOfColumns, ref bool o_FinishGame)
+        private static bool playerTurn(string i_PlayerName, int i_NumOfRows, int i_NumOfColumns, ref bool o_FinishGame)
         {
             string playerInput;
             bool isFinishTurn = false;
             int flipTurnNumber = 1;
+            List<int> playedBlockID = new List<int>();
             eValidationOption validationCode = eValidationOption.Undefined;
 
             do
@@ -161,8 +179,14 @@ namespace C22_Ex02
                 {
                     if (isValidBlockID(playerInput, i_NumOfRows, i_NumOfColumns, out validationCode))
                     {
-                        if(flipTurnNumber == 2)
+                        playedBlockID.Add(convertValidBlockIDToInt(playerInput));
+                        s_Game.FlipOrUnflipBlock(playedBlockID[flipTurnNumber-1], true);
+                        if (flipTurnNumber == 2)
                         {
+                            if(LogicForUI.IsGoodPair(s_Game, playedBlockID[0], playedBlockID[1]))
+                            {
+                                reutrn true;
+                            }
                             isFinishTurn = true;
                         }
                         else
@@ -186,6 +210,7 @@ namespace C22_Ex02
         private static bool isValidBlockID(string i_PlayerInput, int i_NumOfRows, int i_NumOfColumns, out eValidationOption o_ValidationCode)
         {
             bool isValidBlock = false;
+            int blockID;
 
             if (i_PlayerInput.Length == 2)
             {
@@ -193,9 +218,16 @@ namespace C22_Ex02
                 {
                     if (i_PlayerInput[1] < '1' || i_PlayerInput[1] > '1' + i_NumOfRows)
                     {
-                        if(LogicForUI.IsAnUnflippedBlock(s_Game, ))
-                        isValidBlock = true;
-                        o_ValidationCode = eValidationOption.Valid;
+                        blockID = convertValidBlockIDToInt(i_PlayerInput);
+                        if (LogicForUI.IsAnUnflippedBlock(s_Game, blockID))
+                        {
+                            isValidBlock = true;
+                            o_ValidationCode = eValidationOption.Valid;
+                        }
+                        else
+                        {
+                            o_ValidationCode = eValidationOption.BlockAlreadyFlipped;
+                        }
                     }
                     else
                     {
@@ -218,8 +250,9 @@ namespace C22_Ex02
         private static int convertValidBlockIDToInt(string i_StringBlockID)
         {
             int blockIDNumber;
-            i_StringBlockID = i_StringBlockID.Replace("X", String.Empty);
-            i_StringBlockID[0] = (i_StringBlockID[1] - 'A').ToString();
+            string strToConvert;
+
+            strToConvert = string.Format("{0}{1}", (i_StringBlockID[0] - 'A').ToString(), i_StringBlockID[2]);
             if (int.TryParse(i_StringBlockID, out blockIDNumber))
             {
                 return blockIDNumber;

@@ -13,6 +13,7 @@ namespace C22_Ex02
         private char[,] m_MatrixGameBoard;
         private bool[,] m_FlippedBlocksMatrix;
         private int[] m_RandomLettersCounter;
+        private bool m_IsAllBlocksFlipped;
 
         public MemoryGameBoard(int i_InputRows, int i_InputColumns)
         {
@@ -80,6 +81,27 @@ namespace C22_Ex02
         public void FlipOrUnflipBlock(int i_MatrixIndex, bool i_IsFlip)
         {
             m_FlippedBlocksMatrix[i_MatrixIndex / 10, i_MatrixIndex % 10] = i_IsFlip;
+        }
+
+        private void isAllBlocksFlipped()
+        {
+            m_IsAllBlocksFlipped = true;
+
+            for(int i = 0; i < m_NumOfRows; i++)
+            {
+                for(int j = 0; j < m_NumOfColumns; j++)
+                {
+                    if (!m_FlippedBlocksMatrix[i,j])
+                    {
+                        m_IsAllBlocksFlipped = false;
+                    }
+                }
+            }
+        }
+
+        public bool GetIsAllBlocksFlipped()
+        {
+            return m_IsAllBlocksFlipped;
         }
     }
 }

@@ -18,5 +18,6 @@ namespace C22_Ex02
         BadRowNumber,
         BadColumnLetter,
         NotInBlockFormat,
+        BlockAlreadyFlipped,
     }
 }
