@@ -94,9 +94,7 @@ namespace C22_Ex02
             UI.PrintMatrix(numOfRows, numOfColumns);
             System.Threading.Thread.Sleep(200);
 
-            //return IsGoodPair(i_GameBoard, flippedBlockID[0], flippedBlockID[1]);
-            return false;
-        }
+            return IsGoodPair(i_GameBoard, flippedBlockID[0], flippedBlockID[1]);        }
 
         public static bool IsGoodPair(MemoryGameBoard i_GameBoard, int i_FirstBlockID, int i_SecondBlockID)
         {
@@ -105,7 +103,7 @@ namespace C22_Ex02
 
         public static bool IsAnUnflippedBlock(ref MemoryGameBoard i_GameBoard, int i_BlockID)
         {
-            return !i_GameBoard.GetMatrixFlippedBlocks()[i_BlockID / 10 - 1, i_BlockID % 10 - 1];
+            return !i_GameBoard.GetMatrixFlippedBlocks()[i_BlockID / 10, i_BlockID % 10];
         }
 
         public static string GetGameResult()

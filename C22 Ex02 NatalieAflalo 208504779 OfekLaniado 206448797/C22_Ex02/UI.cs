@@ -231,9 +231,9 @@ namespace C22_Ex02
 
             if (i_PlayerInput.Length == 2)
             {
-                if (i_PlayerInput[0] < 'A' || i_PlayerInput[0] > 'A' + i_NumOfColumns)
+                if (i_PlayerInput[0] >= 'A' && i_PlayerInput[0] <= 'A' + i_NumOfColumns)
                 {
-                    if (i_PlayerInput[1] < '1' || i_PlayerInput[1] > '1' + i_NumOfRows)
+                    if (i_PlayerInput[1] >= '1' && i_PlayerInput[1] <= '1' + i_NumOfRows)
                     {
                         blockID = convertValidBlockIDToInt(i_PlayerInput);
                         if (LogicForUI.IsAnUnflippedBlock(ref s_Game, blockID))
@@ -272,7 +272,7 @@ namespace C22_Ex02
             strToConvert = string.Format("{0}{1}", i_StringBlockID[1], (i_StringBlockID[0] - 'A').ToString());
             if (int.TryParse(strToConvert, out blockIDNumber))
             {
-                return blockIDNumber;
+                return blockIDNumber - 10;
             }
 
             return -1;
