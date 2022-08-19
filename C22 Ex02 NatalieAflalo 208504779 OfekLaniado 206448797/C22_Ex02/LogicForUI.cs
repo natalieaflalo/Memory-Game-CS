@@ -33,9 +33,9 @@ namespace C22_Ex02
 
             if (int.TryParse(i_CharRows.ToString(), out o_NumberOfRows) && int.TryParse(i_CharColumns.ToString(), out o_NumberOfColumns))
             {
-                if(o_NumberOfRows > 6 || o_NumberOfColumns > 6)
+                if(o_NumberOfRows <= 6 && o_NumberOfColumns <= 6)
                 {
-                    if(o_NumberOfRows < 4 || o_NumberOfColumns < 4)
+                    if(o_NumberOfRows >= 4 && o_NumberOfColumns >= 4)
                     {
                         if((o_NumberOfRows * o_NumberOfColumns) % 2 == 0)
                         {

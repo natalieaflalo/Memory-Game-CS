@@ -9,3 +9,8 @@ D:\MemoryGame\C22 Ex02 NatalieAflalo 208504779 OfekLaniado 206448797\C22_Ex02\ob
 D:\MemoryGame\C22 Ex02 NatalieAflalo 208504779 OfekLaniado 206448797\C22_Ex02\obj\Debug\C22_Ex02.csproj.CoreCompileInputs.cache
 D:\MemoryGame\C22 Ex02 NatalieAflalo 208504779 OfekLaniado 206448797\C22_Ex02\obj\Debug\C22_Ex02.exe
 D:\MemoryGame\C22 Ex02 NatalieAflalo 208504779 OfekLaniado 206448797\C22_Ex02\obj\Debug\C22_Ex02.pdb
+D:\MemoryGame\C22 Ex02 NatalieAflalo 208504779 OfekLaniado 206448797\C22_Ex02\bin\Debug\C22_Ex02.exe.config
+D:\MemoryGame\C22 Ex02 NatalieAflalo 208504779 OfekLaniado 206448797\C22_Ex02\bin\Debug\C22_Ex02.exe
+D:\MemoryGame\C22 Ex02 NatalieAflalo 208504779 OfekLaniado 206448797\C22_Ex02\bin\Debug\C22_Ex02.pdb
+D:\MemoryGame\C22 Ex02 NatalieAflalo 208504779 OfekLaniado 206448797\C22_Ex02\bin\Debug\Ex02.ConsoleUtils.dll
+D:\MemoryGame\C22 Ex02 NatalieAflalo 208504779 OfekLaniado 206448797\C22_Ex02\obj\Debug\C22_Ex02.csproj.CopyComplete

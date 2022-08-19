@@ -38,6 +38,7 @@ namespace C22_Ex02
 
             boardSizeCheck(ref numOfRows, ref numOfColumns);
             s_Game = new MemoryGameBoard(numOfRows, numOfColumns);
+            printMatrix(numOfRows, numOfColumns);
             bool isFirstPlayerTurn = true;
             bool finishGame = false;
 
@@ -88,7 +89,7 @@ namespace C22_Ex02
             bool isPlayingAgainsComputer = true;
             do
             {
-                Console.WriteLine("Would you like to play against the computer or another player?{0}Enter C for Computer or P for Player");
+                Console.WriteLine("Would you like to play against the computer or another player?{0}Enter C for Computer or P for Player", Environment.NewLine);
                 computerOrPlayer = Console.ReadLine();
                 if (computerOrPlayer == "P")
                 {
@@ -103,7 +104,7 @@ namespace C22_Ex02
                     Console.WriteLine("Input was not P or C.{0}", Environment.NewLine);
                 }
             }
-            while (computerOrPlayer != "P" || computerOrPlayer != "C");
+            while (computerOrPlayer != "P" && computerOrPlayer != "C");
 
             return isPlayingAgainsComputer;
         }
@@ -121,7 +122,7 @@ namespace C22_Ex02
                     Ex02.ConsoleUtils.Screen.Clear();
                     printValidationMessage(validationCode);
                 }
-                Console.WriteLine("The board game size must be between 4X4 and 6X6.{0}Enter board size in (rows)X(columns) format (example: 4X5):");
+                Console.WriteLine("The board game size must be between 4X4 and 6X6.{0}Enter board size in (rows)X(columns) format (example: 4X5):", Environment.NewLine);
                 boardSizeString = Console.ReadLine();
                 if(boardSizeString.Length !=3 || boardSizeString[1] != 'X')
                 {
@@ -301,6 +302,48 @@ namespace C22_Ex02
             else
             {
                 o_FinishGame = true;
+            }
+        }
+
+        private static void printMatrix(int i_InputNumOfRows, int i_InputNumOfColumns)
+        {
+            char letter = 'A';
+            int number = 1;
+            char[,] letterMatrix = s_Game.GetMatrixGameBoard();
+            bool[,] flippedMatrix = s_Game.GetMatrixFlippedBlocks();
+
+            for (int i = 0; i < (i_InputNumOfRows + 1) * 2; i++)
+            {
+                for (int j = 0; j < (i_InputNumOfColumns + 1) * 2; j++)
+                {
+                    if (i == 0 && j == 0)
+                    {
+                        Console.Write(string.Format("         "));
+                    }
+                    else if (i == 0 && j % 2 == 0)
+                    {
+                        Console.Write(Convert.ToChar(letter) + "            ");
+                        letter++;
+                    }
+                    else if (i != 0 && i % 2 == 0 && j == 0)
+                    {
+                        Console.Write("  " + number);
+                        number++;
+                    }
+                    else if (i % 2 != 0)
+                    {
+                        Console.Write(string.Format("======"));
+                    }
+                    else if (i > 0 && i % 2 == 0 && j % 2 != 0)
+                    {
+                        Console.Write(string.Format("  | "));
+                    }
+                    else if (i > 0)
+                    {
+                        Console.Write(string.Format("        "));
+                    }
+                }
+                Console.Write(Environment.NewLine + Environment.NewLine);
             }
         }
     }
