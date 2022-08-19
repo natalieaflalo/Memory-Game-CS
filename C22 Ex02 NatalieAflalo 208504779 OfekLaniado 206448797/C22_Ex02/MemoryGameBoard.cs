@@ -50,13 +50,6 @@ namespace C22_Ex02
             }
         }
 
-        public string GetBoardString()
-        {
-            string boardPrintingString = "";
-
-            return boardPrintingString;
-        }
-
         public char[,] GetMatrixGameBoard()
         {
             return m_MatrixGameBoard;
