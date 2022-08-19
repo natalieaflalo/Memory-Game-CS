@@ -75,6 +75,7 @@ namespace C22_Ex02
 
                 if(s_Game.GetIsAllBlocksFlipped())
                 {
+                    Ex02.ConsoleUtils.Screen.Clear();
                     doneGame(ref finishGame);
                 }
             }
@@ -117,6 +118,7 @@ namespace C22_Ex02
             {
                 if(validationCode != eValidationOption.Undefined)
                 {
+                    Ex02.ConsoleUtils.Screen.Clear();
                     printValidationMessage(validationCode);
                 }
                 Console.WriteLine("The board game size must be between 4X4 and 6X6.{0}Enter board size in (rows)X(columns) format (example: 4X5):");
@@ -170,7 +172,6 @@ namespace C22_Ex02
         private static bool playerTurn(string i_PlayerName, int i_NumOfRows, int i_NumOfColumns, ref bool o_FinishGame)
         {
             string playerInput;
-            bool isFinishTurn = false;
             int flipTurnNumber = 1;
             List<int> playedBlockID = new List<int>();
             eValidationOption validationCode = eValidationOption.Undefined;
@@ -189,21 +190,21 @@ namespace C22_Ex02
                     {
                         playedBlockID.Add(convertValidBlockIDToInt(playerInput));
                         s_Game.FlipOrUnflipBlock(playedBlockID[flipTurnNumber-1], true);
+                        Ex02.ConsoleUtils.Screen.Clear();
+                        //re-print
                         if (flipTurnNumber == 2)
                         {
-                            isFinishTurn = true;
-                            if (LogicForUI.IsGoodPair(s_Game, playedBlockID[0], playedBlockID[1]))
+                            if(!LogicForUI.IsGoodPair(s_Game, playedBlockID[0], playedBlockID[1]))
                             {
-                                if(s_Game.GetIsAllBlocksFlipped())
-                                {
+                                s_Game.FlipOrUnflipBlock(playedBlockID[0], false);
+                                s_Game.FlipOrUnflipBlock(playedBlockID[1], false);
+                                Ex02.ConsoleUtils.Screen.Clear();
+                                //re-print
 
-                                }
-                                return true;
-                            }
-                            else
-                            {
                                 return false;
                             }
+
+                            return true;
                         }
                         else
                         {
@@ -212,11 +213,13 @@ namespace C22_Ex02
                     }
                     else
                     {
+                        Ex02.ConsoleUtils.Screen.Clear();
+                        //re-print
                         printValidationMessage(validationCode);
                     }
                 }
             }
-            while (!o_FinishGame || !isFinishTurn);
+            while (!o_FinishGame);
 
             return false;
         }
@@ -266,13 +269,13 @@ namespace C22_Ex02
             int blockIDNumber;
             string strToConvert;
 
-            strToConvert = string.Format("{0}{1}", (i_StringBlockID[0] - 'A').ToString(), i_StringBlockID[2]);
-            if (int.TryParse(i_StringBlockID, out blockIDNumber))
+            strToConvert = string.Format("{0}{1}", i_StringBlockID[1], (i_StringBlockID[0] - 'A').ToString());
+            if (int.TryParse(strToConvert, out blockIDNumber))
             {
                 return blockIDNumber;
             }
 
-            return 0;
+            return -1;
         }
 
         private static void doneGame(ref bool o_FinishGame)
@@ -284,7 +287,7 @@ namespace C22_Ex02
             
             while(playerInput.Length != 1 || validInputOptions.Contains(playerInput))
             {
-                //clear screen
+                Ex02.ConsoleUtils.Screen.Clear();
                 Console.WriteLine("The input is not valid. Enter Y or y to start a new game, enter N or n to finish the game:");
                 playerInput = Console.ReadLine();
             }
@@ -292,6 +295,7 @@ namespace C22_Ex02
             if(playerInput == "Y" || playerInput == "y")
             {
                 o_FinishGame = false;
+                s_IsFirstGame = false;
                 PlayGame();
             }
             else

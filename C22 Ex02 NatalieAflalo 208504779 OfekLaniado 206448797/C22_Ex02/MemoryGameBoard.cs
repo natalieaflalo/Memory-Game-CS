@@ -91,8 +91,6 @@ namespace C22_Ex02
 
         public bool GetIsAllBlocksFlipped()
         {
-            isAllBlocksFlipped();
-
             return m_IsAllBlocksFlipped;
         }
     }
