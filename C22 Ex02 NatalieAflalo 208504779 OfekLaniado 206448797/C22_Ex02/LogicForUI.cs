@@ -106,18 +106,30 @@ namespace C22_Ex02
             return !i_GameBoard.GetMatrixFlippedBlocks()[i_BlockID / 10, i_BlockID % 10];
         }
 
-        public static string GetGameResult()
+        public static StringBuilder GetGameResult()
         {
-            if(s_FirstPlayer.GetScore() > s_SecondPlayer.GetScore())
+            StringBuilder resultOutput = new StringBuilder();
+            string firstPlayerName = s_FirstPlayer.GetName();
+            string secondPlayerName = s_SecondPlayer.GetName();
+            int firstPlayerScore = s_FirstPlayer.GetScore();
+            int secondPlayerScore = s_SecondPlayer.GetScore();
+
+            if (firstPlayerScore > secondPlayerScore)
             {
-                return string.Format("{0} wins", s_FirstPlayer.GetName());
+                resultOutput.Append(string.Format("{0} wins! {1}", firstPlayerName, Environment.NewLine));
             }
-            if (s_FirstPlayer.GetScore() < s_SecondPlayer.GetScore())
+            else if (firstPlayerScore < secondPlayerScore)
             {
-                return string.Format("{0} wins", s_SecondPlayer.GetName());
+                resultOutput.Append(string.Format("{0} wins! {1}", secondPlayerName, Environment.NewLine));
+            }
+            else
+            {
+                resultOutput.Append(string.Format("Tie! {0}", Environment.NewLine));
             }
 
-            return "Tie";
+            resultOutput.Append(string.Format("The scores are: {0}- {1}, {2}- {3}{4}", firstPlayerName, firstPlayerScore, secondPlayerName, secondPlayerScore, Environment.NewLine));
+
+            return resultOutput;
         }
     }
 }
