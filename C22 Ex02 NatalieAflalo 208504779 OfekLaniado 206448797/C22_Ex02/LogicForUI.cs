@@ -8,15 +8,15 @@ namespace C22_Ex02
 {
     public class LogicForUI
     {
-        public static bool isLegalSizeOfMatrix(string i_CharRows, string i_CharColumns, ref int o_NumberOfRows, ref int o_NumberOfColumns, out eValidationOption o_ValidationCode)
+        public static bool isLegalSizeOfMatrix(char i_CharRows, char i_CharColumns, ref int o_NumberOfRows, ref int o_NumberOfColumns, out eValidationOption o_ValidationCode)
         {
             bool isLegal = false;
 
-            if (int.TryParse(i_CharRows, out o_NumberOfRows) && int.TryParse(i_CharColumns, out o_NumberOfColumns))
+            if (int.TryParse(i_CharRows.ToString(), out o_NumberOfRows) && int.TryParse(i_CharColumns.ToString(), out o_NumberOfColumns))
             {
-                if(o_NumberOfRows * o_NumberOfColumns >= 16)
+                if(o_NumberOfRows > 6 || o_NumberOfColumns > 6)
                 {
-                    if(o_NumberOfRows * o_NumberOfColumns <= 36)
+                    if(o_NumberOfRows < 4 || o_NumberOfColumns < 4)
                     {
                         if((o_NumberOfRows * o_NumberOfColumns) % 2 == 0)
                         {
@@ -30,12 +30,12 @@ namespace C22_Ex02
                     }
                     else
                     {
-                        o_ValidationCode = eValidationOption.BoardTooBig;
+                        o_ValidationCode = eValidationOption.BoardTooSmall;
                     }
                 }
                 else
                 {
-                    o_ValidationCode = eValidationOption.OddNumber;
+                    o_ValidationCode = eValidationOption.BoardTooBig;
                 }
             }
             else
@@ -46,27 +46,28 @@ namespace C22_Ex02
             return isLegal;
         }
 
-        public static bool isValidBlockID(string i_PlayerInput, int i_NumOfRows, int i_NumOfColumns)
-        {
-            bool isValidBlock = false;
-
-            if(i_PlayerInput.Length==2)
-            {
-                if(i_PlayerInput[0] < 'A' || i_PlayerInput[0] > 'A' + i_NumOfColumns)
-                {
-                    if(i_PlayerInput[1] < '1' || i_PlayerInput[1] > '1' + i_NumOfRows)
-                    {
-                        isValidBlock = true;
-                    }
-                }
-            }
-
-            return isValidBlock;
-        }
-
         public static void ComputerTurn()
         {
             // randomly choose valid block and check that it's not chosen already
+        }
+
+        public static bool IsGoodPair(MemoryGameBoard i_GameBoard, int i_FirstBlockID, int i_SecondBlockID)
+        {
+            if(i_GameBoard.GetMatrixGameBoard()[i_FirstBlockID/10,i_FirstBlockID%10] == i_GameBoard.GetMatrixGameBoard()[i_SecondBlockID / 10, i_SecondBlockID % 10])
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public static bool IsAnUnflippedBlock(MemoryGameBoard i_GameBoard, int i_BlockID)
+        {
+            if(i_GameBoard.GetMatrixFlippedBlocks()[i_BlockID/10,i_BlockID%10])
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

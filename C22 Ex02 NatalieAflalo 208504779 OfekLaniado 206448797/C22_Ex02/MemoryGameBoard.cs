@@ -66,5 +66,20 @@ namespace C22_Ex02
 
             return boardPrintingString;
         }
+
+        public char[,] GetMatrixGameBoard()
+        {
+            return m_MatrixGameBoard;
+        }
+
+        public bool[,] GetMatrixFlippedBlocks()
+        {
+            return m_FlippedBlocksMatrix;
+        }
+
+        public void FlipOrUnflipBlock(int i_MatrixIndex, bool i_IsFlip)
+        {
+            m_FlippedBlocksMatrix[i_MatrixIndex / 10, i_MatrixIndex % 10] = i_IsFlip;
+        }
     }
 }

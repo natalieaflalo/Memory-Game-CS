@@ -8,7 +8,7 @@ namespace C22_Ex02
 {
     public static class UI
     {
-        private static MemoryGameBoard game;
+        private static MemoryGameBoard s_Game;
 
         public static void PlayGame()
         {
@@ -35,7 +35,7 @@ namespace C22_Ex02
             }
 
             boardSizeCheck(ref numOfRows, ref numOfColumns);
-            game = new MemoryGameBoard(numOfRows, numOfColumns);
+            s_Game = new MemoryGameBoard(numOfRows, numOfColumns);
             bool isFirstPlayerTurn = true;
             bool finishGame = false;
 
@@ -43,7 +43,7 @@ namespace C22_Ex02
             {
                 if(isFirstPlayerTurn)
                 {
-                    playerTurn(firstPlayer.GetName(), ref finishGame);
+                    playerTurn(firstPlayer.GetName(), numOfRows, numOfColumns, ref finishGame);
                 }
                 else
                 {
@@ -53,14 +53,11 @@ namespace C22_Ex02
                     }
                     else
                     {
-                        playerTurn(secondPlayer.GetName(), ref finishGame);
+                        playerTurn(secondPlayer.GetName(), numOfRows, numOfColumns, ref finishGame);
                     }
                 }
             }
             while (!finishGame);
-            //ask for block ID
-            //check isValidBlockID and flip it
-            //ask again and check again
         }
 
         private static bool playingAgainstComputer()
@@ -98,23 +95,23 @@ namespace C22_Ex02
             {
                 if(validationCode != eValidationOption.Undefined)
                 {
-                    printBoardSizeValidationMessage(validationCode);
+                    printValidationMessage(validationCode);
                 }
                 Console.WriteLine("The board game size must be between 4X4 and 6X6.{0}Enter board size in (rows)X(columns) format (example: 4X5):");
                 boardSizeString = Console.ReadLine();
                 if(boardSizeString.Length !=3 || boardSizeString[1] != 'X')
                 {
-                    validationCode = eValidationOption.NotInFormat;
+                    validationCode = eValidationOption.NotInSizeFormat;
                 }
                 else
                 {
-                    isValidBoard = LogicForUI.isLegalSizeOfMatrix(boardSizeString, boardSizeString, ref o_NumOfRows, ref o_NumOfColumns, out validationCode);
+                    isValidBoard = LogicForUI.isLegalSizeOfMatrix(boardSizeString[0], boardSizeString[2], ref o_NumOfRows, ref o_NumOfColumns, out validationCode);
                 }
             }
             while (!isValidBoard);
         }
 
-        private static void printBoardSizeValidationMessage(eValidationOption validationCode)
+        private static void printValidationMessage(eValidationOption validationCode)
         {
             switch(validationCode)
             {
@@ -130,8 +127,17 @@ namespace C22_Ex02
                 case eValidationOption.BoardTooSmall:
                     Console.WriteLine("The Input is smaller than 4X4.{0}", Environment.NewLine);
                     break;
-                case eValidationOption.NotInFormat:
+                case eValidationOption.NotInSizeFormat:
                     Console.WriteLine("The Input is not in (rows)X(columns) format.{0}", Environment.NewLine);
+                    break;
+                case eValidationOption.BadColumnLetter:
+                    Console.WriteLine("The Input for the column is not an upper case letter column on the board.{0}", Environment.NewLine);
+                    break;
+                case eValidationOption.BadRowNumber:
+                    Console.WriteLine("The Input for the row is not a row number on the board.{0}", Environment.NewLine);
+                    break;
+                case eValidationOption.NotInBlockFormat:
+                    Console.WriteLine("The Input is not in (Column Upper Case Letter)(Row Number) format.{0}", Environment.NewLine);
                     break;
             }
         }
@@ -139,44 +145,87 @@ namespace C22_Ex02
         private static void playerTurn(string i_PlayerName, int i_NumOfRows, int i_NumOfColumns, ref bool o_FinishGame)
         {
             string playerInput;
-            bool isValidTurn = false;
+            bool isFinishTurn = false;
+            int flipTurnNumber = 1;
+            eValidationOption validationCode = eValidationOption.Undefined;
 
-            Console.WriteLine("{0} Turn!{1}If you want to finish the game press q or Q{1}If you want to play, enter block ID in (Column Upper Case Letter)(Row Number) format (Example- A2):", i_PlayerName, Environment.NewLine);
-            playerInput = Console.ReadLine();
-            if (playerInput != "Q" || playerInput != "q")
+            do
             {
-                o_FinishGame = true;
-            }
-            else
-            {
-                isValidTurn = LogicForUI.isValidBlockID(playerInput, i_NumOfRows, i_NumOfColumns);
-                if(isValidTurn)
+                Console.WriteLine("{0} Turn!{1}Please choose card number {2} to flip.{1}If you want to finish the game press q or Q{1}If you want to keep playing, enter block ID in (Column Upper Case Letter)(Row Number) format (Example- A2):", i_PlayerName, Environment.NewLine, flipTurnNumber);
+                playerInput = Console.ReadLine();
+                if (playerInput != "Q" || playerInput != "q")
                 {
-                    Console.WriteLine("Next player turn.");
+                    o_FinishGame = true;
                 }
                 else
                 {
-
+                    if (isValidBlockID(playerInput, i_NumOfRows, i_NumOfColumns, out validationCode))
+                    {
+                        if(flipTurnNumber == 2)
+                        {
+                            isFinishTurn = true;
+                        }
+                        else
+                        {
+                            flipTurnNumber++;
+                        }
+                    }
+                    else
+                    {
+                        printValidationMessage(validationCode);
+                    }
                 }
             }
+            while (!o_FinishGame || !isFinishTurn);
+            
             //  ask for block ID
             //  check isValidBlockID and flip it
             //  ask again and check again
         }
 
-        private static void printPlayerInputValidationMessage()
+        private static bool isValidBlockID(string i_PlayerInput, int i_NumOfRows, int i_NumOfColumns, out eValidationOption o_ValidationCode)
         {
+            bool isValidBlock = false;
 
+            if (i_PlayerInput.Length == 2)
+            {
+                if (i_PlayerInput[0] < 'A' || i_PlayerInput[0] > 'A' + i_NumOfColumns)
+                {
+                    if (i_PlayerInput[1] < '1' || i_PlayerInput[1] > '1' + i_NumOfRows)
+                    {
+                        if(LogicForUI.IsAnUnflippedBlock(s_Game, ))
+                        isValidBlock = true;
+                        o_ValidationCode = eValidationOption.Valid;
+                    }
+                    else
+                    {
+                        o_ValidationCode = eValidationOption.BadRowNumber;
+                    }
+                }
+                else
+                {
+                    o_ValidationCode = eValidationOption.BadColumnLetter;
+                }
+            }
+            else
+            {
+                o_ValidationCode = eValidationOption.NotInBlockFormat;
+            }
+
+            return isValidBlock;
         }
 
-        private static bool isValidBlockID()
+        private static int convertValidBlockIDToInt(string i_StringBlockID)
         {
-            bool isBlockID = false;
-
-            return isBlockID;
+            int blockIDNumber;
+            i_StringBlockID = i_StringBlockID.Replace("X", String.Empty);
+            i_StringBlockID[0] = (i_StringBlockID[1] - 'A').ToString();
+            if (int.TryParse(i_StringBlockID, out blockIDNumber))
+            {
+                return blockIDNumber;
+            }
+            return 0;
         }
-
-
         /// <summary>
         /// private static void QuitGame() 
         ///{

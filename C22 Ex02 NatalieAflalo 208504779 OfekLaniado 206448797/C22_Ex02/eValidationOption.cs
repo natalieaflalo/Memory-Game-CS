@@ -13,9 +13,10 @@ namespace C22_Ex02
         OddNumber,
         BoardTooBig,
         BoardTooSmall,
-        NotInFormat,
+        NotInSizeFormat,
         Undefined,
-
-
+        BadRowNumber,
+        BadColumnLetter,
+        NotInBlockFormat,
     }
 }
