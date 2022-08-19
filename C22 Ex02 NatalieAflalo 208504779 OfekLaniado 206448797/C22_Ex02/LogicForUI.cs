@@ -89,10 +89,10 @@ namespace C22_Ex02
 
             i_GameBoard.FlipOrUnflipBlock(flippedBlockID[0], true);
             UI.PrintMatrix(numOfRows, numOfColumns);
-            System.Threading.Thread.Sleep(200);
+            System.Threading.Thread.Sleep(2000);
             i_GameBoard.FlipOrUnflipBlock(flippedBlockID[1], true);
             UI.PrintMatrix(numOfRows, numOfColumns);
-            System.Threading.Thread.Sleep(200);
+            System.Threading.Thread.Sleep(2000);
 
             return IsGoodPair(i_GameBoard, flippedBlockID[0], flippedBlockID[1]);        }
 

@@ -59,7 +59,8 @@ namespace C22_Ex02
                 {
                     if(s_IsPlayingAgainstComputer)
                     {
-                        if(!LogicForUI.ComputerTurn(ref s_Game))
+                        Console.WriteLine("Computer's Turn:");
+                        if (!LogicForUI.ComputerTurn(ref s_Game))
                         {
                             isFirstPlayerTurn = true;
                             PrintMatrix(numOfRows, numOfColumns);
@@ -203,7 +204,7 @@ namespace C22_Ex02
                             {
                                 s_Game.FlipOrUnflipBlock(playedBlockID[0], false);
                                 s_Game.FlipOrUnflipBlock(playedBlockID[1], false);
-                                System.Threading.Thread.Sleep(200);
+                                System.Threading.Thread.Sleep(2000);
                                 PrintMatrix(i_NumOfRows, i_NumOfColumns);
 
                                 return false;
