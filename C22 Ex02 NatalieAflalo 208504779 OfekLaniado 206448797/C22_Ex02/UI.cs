@@ -72,6 +72,11 @@ namespace C22_Ex02
                         }
                     }
                 }
+
+                if(s_Game.GetIsAllBlocksFlipped())
+                {
+                    doneGame(ref finishGame);
+                }
             }
             while (!finishGame);
         }
@@ -270,10 +275,29 @@ namespace C22_Ex02
             return 0;
         }
 
-        private static void doneGame()
+        private static void doneGame(ref bool o_FinishGame)
         {
-            Console.WriteLine("Game Over!{0}The result is: {1} If you want to finish the game enter q or Q:", Environment.NewLine, LogicForUI.GetGameResult());
+            Console.WriteLine("Game Over!{0}The result is: {1} If you want to finish the game enter q,Q,n or N. If you want to play a new game enter Y or y:", Environment.NewLine, LogicForUI.GetGameResult());
+            //add printing of scores
             string playerInput = Console.ReadLine();
+            string validInputOptions = "YyNnQq";
+            
+            while(playerInput.Length != 1 || validInputOptions.Contains(playerInput))
+            {
+                //clear screen
+                Console.WriteLine("The input is not valid. Enter Y or y to start a new game, enter N or n to finish the game:");
+                playerInput = Console.ReadLine();
+            }
+
+            if(playerInput == "Y" || playerInput == "y")
+            {
+                o_FinishGame = false;
+                PlayGame();
+            }
+            else
+            {
+                o_FinishGame = true;
+            }
         }
     }
 }
