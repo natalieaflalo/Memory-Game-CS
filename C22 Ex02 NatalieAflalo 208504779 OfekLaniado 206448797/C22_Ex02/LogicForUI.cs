@@ -65,9 +65,37 @@ namespace C22_Ex02
             return isLegal;
         }
 
-        public static void ComputerTurn()
+        public static bool ComputerTurn(ref MemoryGameBoard i_GameBoard)
         {
-            // randomly choose valid block and check that it's not chosen already
+            Random randomIndexNumber = new Random();
+            int randomRow;
+            int randomColumn;
+            List<int> flippedBlockID = new List<int>();
+            int numOfFlips = 0;
+            int numOfRows = i_GameBoard.GetNumberOfRows();
+            int numOfColumns = i_GameBoard.GetNumberOfColumns();
+
+            do
+            {
+                randomRow = randomIndexNumber.Next(1, numOfRows);
+                randomColumn = randomIndexNumber.Next(1, numOfColumns);
+                if(IsAnUnflippedBlock(ref i_GameBoard, randomRow * 10 + randomColumn))
+                {
+                    flippedBlockID.Add(randomRow * 10 + randomColumn);
+                    numOfFlips++;
+                }
+            }
+            while (numOfFlips < 2);
+
+            i_GameBoard.FlipOrUnflipBlock(flippedBlockID[0], true);
+            UI.PrintMatrix(numOfRows, numOfColumns);
+            System.Threading.Thread.Sleep(200);
+            i_GameBoard.FlipOrUnflipBlock(flippedBlockID[1], true);
+            UI.PrintMatrix(numOfRows, numOfColumns);
+            System.Threading.Thread.Sleep(200);
+
+            //return IsGoodPair(i_GameBoard, flippedBlockID[0], flippedBlockID[1]);
+            return false;
         }
 
         public static bool IsGoodPair(MemoryGameBoard i_GameBoard, int i_FirstBlockID, int i_SecondBlockID)
@@ -75,9 +103,9 @@ namespace C22_Ex02
             return i_GameBoard.GetMatrixGameBoard()[i_FirstBlockID / 10, i_FirstBlockID % 10] == i_GameBoard.GetMatrixGameBoard()[i_SecondBlockID / 10, i_SecondBlockID % 10];
         }
 
-        public static bool IsAnUnflippedBlock(MemoryGameBoard i_GameBoard, int i_BlockID)
+        public static bool IsAnUnflippedBlock(ref MemoryGameBoard i_GameBoard, int i_BlockID)
         {
-            return !i_GameBoard.GetMatrixFlippedBlocks()[i_BlockID / 10, i_BlockID % 10];
+            return !i_GameBoard.GetMatrixFlippedBlocks()[i_BlockID / 10 - 1, i_BlockID % 10 - 1];
         }
 
         public static string GetGameResult()

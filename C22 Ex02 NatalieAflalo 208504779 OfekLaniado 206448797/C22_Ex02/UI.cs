@@ -38,7 +38,7 @@ namespace C22_Ex02
 
             boardSizeCheck(ref numOfRows, ref numOfColumns);
             s_Game = new MemoryGameBoard(numOfRows, numOfColumns);
-            printMatrix(numOfRows, numOfColumns);
+            PrintMatrix(numOfRows, numOfColumns);
             bool isFirstPlayerTurn = true;
             bool finishGame = false;
 
@@ -59,7 +59,11 @@ namespace C22_Ex02
                 {
                     if(s_IsPlayingAgainstComputer)
                     {
-                        LogicForUI.ComputerTurn();
+                        if(!LogicForUI.ComputerTurn(ref s_Game))
+                        {
+                            isFirstPlayerTurn = true;
+                            PrintMatrix(numOfRows, numOfColumns);
+                        }
                     }
                     else
                     {
@@ -173,15 +177,15 @@ namespace C22_Ex02
         private static bool playerTurn(string i_PlayerName, int i_NumOfRows, int i_NumOfColumns, ref bool o_FinishGame)
         {
             string playerInput;
-            int flipTurnNumber = 1;
+            int flipTurnNumber = 0;
             List<int> playedBlockID = new List<int>();
             eValidationOption validationCode = eValidationOption.Undefined;
 
             do
             {
-                Console.WriteLine("{0} Turn!{1}Please choose card number {2} to flip.{1}If you want to finish the game enter q or Q{1}If you want to keep playing, enter block ID in (Column Upper Case Letter)(Row Number) format (Example- A2):", i_PlayerName, Environment.NewLine, flipTurnNumber);
+                Console.WriteLine("{0} Turn!{1}Please choose block number {2} to flip.{1}If you want to finish the game enter q or Q{1}If you want to keep playing, enter block ID in (Column Upper Case Letter)(Row Number) format (Example- A2):", i_PlayerName, Environment.NewLine, flipTurnNumber + 1);
                 playerInput = Console.ReadLine();
-                if (playerInput != "Q" || playerInput != "q")
+                if (playerInput == "Q" || playerInput == "q")
                 {
                     o_FinishGame = true;
                 }
@@ -190,37 +194,32 @@ namespace C22_Ex02
                     if (isValidBlockID(playerInput, i_NumOfRows, i_NumOfColumns, out validationCode))
                     {
                         playedBlockID.Add(convertValidBlockIDToInt(playerInput));
-                        s_Game.FlipOrUnflipBlock(playedBlockID[flipTurnNumber-1], true);
-                        Ex02.ConsoleUtils.Screen.Clear();
-                        //re-print
+                        s_Game.FlipOrUnflipBlock(playedBlockID[flipTurnNumber], true);
+                        flipTurnNumber++;
+                        PrintMatrix(i_NumOfRows, i_NumOfColumns);
                         if (flipTurnNumber == 2)
                         {
                             if(!LogicForUI.IsGoodPair(s_Game, playedBlockID[0], playedBlockID[1]))
                             {
                                 s_Game.FlipOrUnflipBlock(playedBlockID[0], false);
                                 s_Game.FlipOrUnflipBlock(playedBlockID[1], false);
-                                Ex02.ConsoleUtils.Screen.Clear();
-                                //re-print
+                                System.Threading.Thread.Sleep(200);
+                                PrintMatrix(i_NumOfRows, i_NumOfColumns);
 
                                 return false;
                             }
 
                             return true;
                         }
-                        else
-                        {
-                            flipTurnNumber++;
-                        }
                     }
                     else
                     {
-                        Ex02.ConsoleUtils.Screen.Clear();
-                        //re-print
                         printValidationMessage(validationCode);
+                        PrintMatrix(i_NumOfRows, i_NumOfColumns);
                     }
                 }
             }
-            while (!o_FinishGame);
+            while (!o_FinishGame && flipTurnNumber < 3);
 
             return false;
         }
@@ -237,7 +236,7 @@ namespace C22_Ex02
                     if (i_PlayerInput[1] < '1' || i_PlayerInput[1] > '1' + i_NumOfRows)
                     {
                         blockID = convertValidBlockIDToInt(i_PlayerInput);
-                        if (LogicForUI.IsAnUnflippedBlock(s_Game, blockID))
+                        if (LogicForUI.IsAnUnflippedBlock(ref s_Game, blockID))
                         {
                             isValidBlock = true;
                             o_ValidationCode = eValidationOption.Valid;
@@ -305,13 +304,14 @@ namespace C22_Ex02
             }
         }
 
-        private static void printMatrix(int i_InputNumOfRows, int i_InputNumOfColumns)
+        public static void PrintMatrix(int i_InputNumOfRows, int i_InputNumOfColumns)
         {
             char letter = 'A';
             int number = 1;
             char[,] letterMatrix = s_Game.GetMatrixGameBoard();
             bool[,] flippedMatrix = s_Game.GetMatrixFlippedBlocks();
 
+            Ex02.ConsoleUtils.Screen.Clear();
             for (int i = 0; i < (i_InputNumOfRows + 1) * 2; i++)
             {
                 for (int j = 0; j < (i_InputNumOfColumns + 1) * 2; j++)

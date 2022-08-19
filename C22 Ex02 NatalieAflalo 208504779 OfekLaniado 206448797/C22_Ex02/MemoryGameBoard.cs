@@ -50,6 +50,16 @@ namespace C22_Ex02
             }
         }
 
+        public int GetNumberOfRows()
+        {
+            return m_NumOfRows;
+        }
+
+        public int GetNumberOfColumns()
+        {
+            return m_NumOfColumns;
+        }
+
         public char[,] GetMatrixGameBoard()
         {
             return m_MatrixGameBoard;
