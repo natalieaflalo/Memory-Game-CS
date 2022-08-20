@@ -8,7 +8,7 @@ namespace C22_Ex02
     {
         private static Player s_FirstPlayer;
         private static Player s_SecondPlayer;
-        private static Dictionary<int, char> m_AIMemoryDict;
+        private static Dictionary<int, char> s_AIMemoryDict;
 
         public static void CreatePlayers(string i_FirstName, string i_SecondName)
         {
@@ -18,7 +18,7 @@ namespace C22_Ex02
 
         public static void InitiateAIDictionary()
         {
-            m_AIMemoryDict = new Dictionary<int, char>();
+            s_AIMemoryDict = new Dictionary<int, char>();
         }
 
         public static Player GetFirstPlayer()
@@ -33,30 +33,30 @@ namespace C22_Ex02
 
         public static void UpdateAIDictionary(int i_BlockID, char i_ValueInMatrix)
         {
-            if(!m_AIMemoryDict.ContainsKey(i_BlockID))
+            if(!s_AIMemoryDict.ContainsKey(i_BlockID))
             {
-                m_AIMemoryDict.Add(i_BlockID, i_ValueInMatrix);
+                s_AIMemoryDict.Add(i_BlockID, i_ValueInMatrix);
             }
         }
 
         public static void ClearFlippedPairFromAIMatrix(int i_FirstBlockID, int i_SecondBlockID)
         {
-            if(m_AIMemoryDict.ContainsKey(i_FirstBlockID))
+            if(s_AIMemoryDict.ContainsKey(i_FirstBlockID))
             {
-                m_AIMemoryDict.Remove(i_FirstBlockID);
+                s_AIMemoryDict.Remove(i_FirstBlockID);
             }
 
-            if(m_AIMemoryDict.ContainsKey(i_SecondBlockID))
+            if(s_AIMemoryDict.ContainsKey(i_SecondBlockID))
             {
-                m_AIMemoryDict.Remove(i_SecondBlockID);
+                s_AIMemoryDict.Remove(i_SecondBlockID);
             }
         }
 
         public static bool IsFindAIPair(out int o_FirstBlockID, out int o_SecondBlockID)
         {
-            foreach (KeyValuePair<int, char> firstBlockFromMemory in m_AIMemoryDict)
+            foreach (KeyValuePair<int, char> firstBlockFromMemory in s_AIMemoryDict)
             {
-                foreach (KeyValuePair<int, char> secondBlockFromMemory in m_AIMemoryDict)
+                foreach (KeyValuePair<int, char> secondBlockFromMemory in s_AIMemoryDict)
                 {
                     if (!firstBlockFromMemory.Key.Equals(secondBlockFromMemory.Key))
                     {
@@ -77,7 +77,7 @@ namespace C22_Ex02
             return false;
         }
 
-        public static bool isLegalSizeOfMatrix(char i_CharRows, char i_CharColumns, ref int o_NumberOfRows, ref int o_NumberOfColumns, out eValidationOption o_ValidationCode)
+        public static bool IsLegalSizeOfMatrix(char i_CharRows, char i_CharColumns, ref int o_NumberOfRows, ref int o_NumberOfColumns, out eValidationOption o_ValidationCode)
         {
             bool isLegal = false;
 
@@ -115,7 +115,7 @@ namespace C22_Ex02
             return isLegal;
         }
 
-        public static bool ComputerTurn(ref MemoryGameBoard i_GameBoard)
+        public static bool ComputerTurn(ref MemoryGameBoard io_GameBoard)
         {
             Random randomIndexNumber = new Random();
             int randomRow;
@@ -124,8 +124,8 @@ namespace C22_Ex02
             int secondAIPairBlockID;
             List<int> flippedBlockID = new List<int>();
             int numOfFlips = 0;
-            int numOfRows = i_GameBoard.GetNumberOfRows();
-            int numOfColumns = i_GameBoard.GetNumberOfColumns();
+            int numOfRows = io_GameBoard.GetNumberOfRows();
+            int numOfColumns = io_GameBoard.GetNumberOfColumns();
 
             do
             {
@@ -133,13 +133,13 @@ namespace C22_Ex02
                 {
                     randomRow = randomIndexNumber.Next(numOfRows);
                     randomColumn = randomIndexNumber.Next(numOfColumns);
-                    if (IsAnUnflippedBlock(ref i_GameBoard, (randomRow * 10) + randomColumn))
+                    if (IsAnUnflippedBlock(ref io_GameBoard, (randomRow * 10) + randomColumn))
                     {
                         flippedBlockID.Add((randomRow * 10) + randomColumn);
-                        i_GameBoard.FlipOrUnflipBlock(flippedBlockID[numOfFlips], true);
+                        io_GameBoard.FlipOrUnflipBlock(flippedBlockID[numOfFlips], true);
                         UI.PrintMatrix(numOfRows, numOfColumns);
                         System.Threading.Thread.Sleep(2000);
-                        UpdateAIDictionary(flippedBlockID[0], i_GameBoard.GetMatrixGameBoard()[randomRow, randomColumn]);
+                        UpdateAIDictionary(flippedBlockID[0], io_GameBoard.GetMatrixGameBoard()[randomRow, randomColumn]);
                         numOfFlips++;
                     }
                 }
@@ -149,10 +149,10 @@ namespace C22_Ex02
                     flippedBlockID.Add(firstAIPairBlockID);
                     flippedBlockID.Add(secondAIPairBlockID);
                     System.Threading.Thread.Sleep(2000);
-                    i_GameBoard.FlipOrUnflipBlock(flippedBlockID[0], true);
+                    io_GameBoard.FlipOrUnflipBlock(flippedBlockID[0], true);
                     UI.PrintMatrix(numOfRows, numOfColumns);
                     System.Threading.Thread.Sleep(2000);
-                    i_GameBoard.FlipOrUnflipBlock(flippedBlockID[1], true);
+                    io_GameBoard.FlipOrUnflipBlock(flippedBlockID[1], true);
                     UI.PrintMatrix(numOfRows, numOfColumns);
                     System.Threading.Thread.Sleep(2000);
                     numOfFlips = 2;
@@ -160,10 +160,10 @@ namespace C22_Ex02
             }
             while (numOfFlips < 2);
 
-            if(!IsGoodPair(i_GameBoard, flippedBlockID[0], flippedBlockID[1]))
+            if(!IsGoodPair(io_GameBoard, flippedBlockID[0], flippedBlockID[1]))
             {
-                i_GameBoard.FlipOrUnflipBlock(flippedBlockID[0], false);
-                i_GameBoard.FlipOrUnflipBlock(flippedBlockID[1], false);
+                io_GameBoard.FlipOrUnflipBlock(flippedBlockID[0], false);
+                io_GameBoard.FlipOrUnflipBlock(flippedBlockID[1], false);
                 UI.PrintMatrix(numOfRows, numOfColumns);
 
                 return false;
@@ -181,9 +181,9 @@ namespace C22_Ex02
             return i_GameBoard.GetMatrixGameBoard()[i_FirstBlockID / 10, i_FirstBlockID % 10] == i_GameBoard.GetMatrixGameBoard()[i_SecondBlockID / 10, i_SecondBlockID % 10];
         }
 
-        public static bool IsAnUnflippedBlock(ref MemoryGameBoard i_GameBoard, int i_BlockID)
+        public static bool IsAnUnflippedBlock(ref MemoryGameBoard io_GameBoard, int i_BlockID)
         {
-            return !i_GameBoard.GetMatrixFlippedBlocks()[i_BlockID / 10, i_BlockID % 10];
+            return !io_GameBoard.GetMatrixFlippedBlocks()[i_BlockID / 10, i_BlockID % 10];
         }
 
         public static StringBuilder GetGameResult()

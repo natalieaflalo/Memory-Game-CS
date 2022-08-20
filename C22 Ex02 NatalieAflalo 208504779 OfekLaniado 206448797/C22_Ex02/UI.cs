@@ -137,15 +137,15 @@ namespace C22_Ex02
                 }
                 else
                 {
-                    isValidBoard = LogicForUI.isLegalSizeOfMatrix(boardSizeString[0], boardSizeString[2], ref o_NumOfRows, ref o_NumOfColumns, out validationCode);
+                    isValidBoard = LogicForUI.IsLegalSizeOfMatrix(boardSizeString[0], boardSizeString[2], ref o_NumOfRows, ref o_NumOfColumns, out validationCode);
                 }
             }
             while (!isValidBoard);
         }
 
-        private static void printValidationMessage(eValidationOption validationCode)
+        private static void printValidationMessage(eValidationOption i_ValidationCode)
         {
-            switch(validationCode)
+            switch(i_ValidationCode)
             {
                 case eValidationOption.NotANumber:
                     Console.WriteLine("The input is not a number.{0}", Environment.NewLine);
@@ -319,38 +319,38 @@ namespace C22_Ex02
             o_FinishGame = true;
         }
 
-        public static void PrintMatrix(int i_InputNumOfRows, int i_InputNumOfColumns)
+        public static void PrintMatrix(int i_NumberOfRows, int i_NumberOfColumns)
         {
-            int amountOfEqualSigns = (i_InputNumOfColumns * 4) + 1;
-            string equalLine = string.Format("  {0}", new string('=', amountOfEqualSigns));
+            StringBuilder columnLettersRow = new StringBuilder(" ");
+            int rowSeparetorLength = (i_NumberOfColumns * 4) + 1;
+            string rowSeparetor = string.Format("  {0}", new string('=', rowSeparetorLength));
 
             Ex02.ConsoleUtils.Screen.Clear();
-            StringBuilder topRowToPrint = new StringBuilder(" ");
 
-            for (int i = 0; i < i_InputNumOfColumns; i++)
+            for (int i = 0; i < i_NumberOfColumns; i++)
             {
-                topRowToPrint.Append(string.Format("   {0}", (char)(i + 'A')));
+                columnLettersRow.Append(string.Format("   {0}", (char)(i + 'A')));
             }
 
-            Console.WriteLine(topRowToPrint.ToString());
-            Console.WriteLine(equalLine);
+            Console.WriteLine(columnLettersRow.ToString());
+            Console.WriteLine(rowSeparetor);
 
-            for (int i = 0; i < i_InputNumOfRows; i++)
+            for (int i = 0; i < i_NumberOfRows; i++)
             {
-                string beginningOfRow = string.Format("{0} |", i + 1);
+                string rowDigit = string.Format("{0} |", i + 1);
 
-                Console.Write(beginningOfRow);
+                Console.Write(rowDigit);
 
-                for (int j = 0; j < i_InputNumOfColumns; j++)
+                for (int j = 0; j < i_NumberOfColumns; j++)
                 {
-                    bool isFlippedLetter = s_Game.GetMatrixFlippedBlocks()[i, j];
-                    string blockToProint = string.Format(" {0} |", isFlippedLetter ? s_Game.GetMatrixGameBoard()[i, j] : ' ');
+                    bool isFlippedBlock = s_Game.GetMatrixFlippedBlocks()[i, j];
+                    string blockToProint = string.Format(" {0} |", isFlippedBlock ? s_Game.GetMatrixGameBoard()[i, j] : ' ');
 
                     Console.Write(blockToProint);
                 }
 
                 Console.WriteLine();
-                Console.WriteLine(equalLine);
+                Console.WriteLine(rowSeparetor);
             }
 
             Console.WriteLine();
