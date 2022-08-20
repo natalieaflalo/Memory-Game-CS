@@ -43,6 +43,12 @@ namespace C22_Ex02
             m_AIMatrix[i_BlockID / 10, i_BlockID % 10] = i_ValueInMatrix;
         }
 
+        public static void ClearFlippedPairFromAIMatrix(int i_FirstBlockID, int i_SecondBlockID)
+        {
+            m_AIMatrix[i_FirstBlockID / 10, i_FirstBlockID % 10] = '\0';
+            m_AIMatrix[i_SecondBlockID / 10, i_SecondBlockID % 10] = '\0';
+        }
+
         public static bool FindAIMatch(ref int o_FirstRowIndex, ref int o_FirstColumnIndex, ref int o_SecondRowIndex, ref int o_SecondColumnIndex)
         {
             int[] countDuplicates = new int[m_NumOfRows * m_NumOfColumns / 2];

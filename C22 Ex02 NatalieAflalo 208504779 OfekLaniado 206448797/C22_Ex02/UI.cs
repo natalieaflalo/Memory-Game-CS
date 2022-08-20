@@ -39,6 +39,7 @@ namespace C22_Ex02
 
             boardSizeCheck(ref numOfRows, ref numOfColumns);
             s_Game = new MemoryGameBoard(numOfRows, numOfColumns);
+            LogicForUI.InitiateAIMatrix(numOfRows, numOfColumns);
             PrintMatrix(numOfRows, numOfColumns);
             bool isFirstPlayerTurn = true;
             bool finishGame = false;
@@ -207,11 +208,15 @@ namespace C22_Ex02
                             {
                                 s_Game.FlipOrUnflipBlock(playedBlockID[0], false);
                                 s_Game.FlipOrUnflipBlock(playedBlockID[1], false);
+                                LogicForUI.UpdateAIMatrix(playedBlockID[0], s_Game.GetMatrixGameBoard()[playedBlockID[0] / 10, playedBlockID[0] % 10]);
+                                LogicForUI.UpdateAIMatrix(playedBlockID[1], s_Game.GetMatrixGameBoard()[playedBlockID[1] / 10, playedBlockID[1] % 10]);
                                 System.Threading.Thread.Sleep(2000);
                                 PrintMatrix(i_NumOfRows, i_NumOfColumns);
 
                                 return false;
                             }
+
+                            LogicForUI.ClearFlippedPairFromAIMatrix(playedBlockID[0], playedBlockID[1]);
 
                             return true;
                         }
