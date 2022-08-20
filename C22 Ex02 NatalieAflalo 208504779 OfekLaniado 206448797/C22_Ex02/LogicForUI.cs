@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace C22_Ex02
 {
@@ -10,10 +8,7 @@ namespace C22_Ex02
     {
         private static Player s_FirstPlayer;
         private static Player s_SecondPlayer;
-        private static char[,] m_AIMatrix;
-        private static int m_NumOfRows;
-        private static int m_NumOfColumns;
-
+        private static Dictionary<int, char> m_AIMemoryDict;
 
         public static void CreatePlayers(string i_FirstName, string i_SecondName)
         {
@@ -21,11 +16,9 @@ namespace C22_Ex02
             s_SecondPlayer = new Player(i_SecondName);
         }
 
-        public static void InitiateAIMatrix(int i_NumOfRows, int i_NumOfColumns)
+        public static void InitiateAIDictionary()
         {
-            m_NumOfRows = i_NumOfRows;
-            m_NumOfColumns = i_NumOfColumns;
-            m_AIMatrix = new char[i_NumOfRows, i_NumOfColumns];
+            m_AIMemoryDict = new Dictionary<int, char>();
         }
 
         public static Player GetFirstPlayer()
@@ -38,39 +31,50 @@ namespace C22_Ex02
             return s_SecondPlayer;
         }
 
-        public static void UpdateAIMatrix(int i_BlockID, char i_ValueInMatrix)
+        public static void UpdateAIDictionary(int i_BlockID, char i_ValueInMatrix)
         {
-            m_AIMatrix[i_BlockID / 10, i_BlockID % 10] = i_ValueInMatrix;
+            if(!m_AIMemoryDict.ContainsKey(i_BlockID))
+            {
+                m_AIMemoryDict.Add(i_BlockID, i_ValueInMatrix);
+            }
         }
 
         public static void ClearFlippedPairFromAIMatrix(int i_FirstBlockID, int i_SecondBlockID)
         {
-            m_AIMatrix[i_FirstBlockID / 10, i_FirstBlockID % 10] = '\0';
-            m_AIMatrix[i_SecondBlockID / 10, i_SecondBlockID % 10] = '\0';
+            if(m_AIMemoryDict.ContainsKey(i_FirstBlockID))
+            {
+                m_AIMemoryDict.Remove(i_FirstBlockID);
+            }
+
+            if(m_AIMemoryDict.ContainsKey(i_SecondBlockID))
+            {
+                m_AIMemoryDict.Remove(i_SecondBlockID);
+            }
         }
 
-        public static bool FindAIMatch(ref int o_FirstRowIndex, ref int o_FirstColumnIndex, ref int o_SecondRowIndex, ref int o_SecondColumnIndex)
+        public static bool IsFindAIPair(out int o_FirstBlockID, out int o_SecondBlockID)
         {
-            int[] countDuplicates = new int[m_NumOfRows * m_NumOfColumns / 2];
-
-            for(int i = 0; i < m_NumOfRows; i++)
+            foreach (KeyValuePair<int, char> firstBlockFromMemory in m_AIMemoryDict)
             {
-                for (int j = 0; j < m_NumOfColumns; j++)
+                foreach (KeyValuePair<int, char> secondBlockFromMemory in m_AIMemoryDict)
                 {
-                    if(m_AIMatrix[i, j] != '\0')
+                    if (!firstBlockFromMemory.Key.Equals(secondBlockFromMemory.Key))
                     {
-                        countDuplicates[m_AIMatrix[i, j] - 'A']++;
+                        if (firstBlockFromMemory.Value == secondBlockFromMemory.Value)
+                        {
+                            o_FirstBlockID = firstBlockFromMemory.Key;
+                            o_SecondBlockID = secondBlockFromMemory.Key;
+
+                            return true;
+                        }
                     }
                 }
             }
 
-            for(int k = 0; k < m_NumOfRows * m_NumOfColumns / 2; k++)
-            {
-                if(countDuplicates[k]==2)
-                {
-                    o_FirstColumnIndex
-                }
-            }
+            o_FirstBlockID = -1;
+            o_SecondBlockID = -1;
+
+            return false;
         }
 
         public static bool isLegalSizeOfMatrix(char i_CharRows, char i_CharColumns, ref int o_NumberOfRows, ref int o_NumberOfColumns, out eValidationOption o_ValidationCode)
@@ -116,6 +120,8 @@ namespace C22_Ex02
             Random randomIndexNumber = new Random();
             int randomRow;
             int randomColumn;
+            int firstAIPairBlockID;
+            int secondAIPairBlockID;
             List<int> flippedBlockID = new List<int>();
             int numOfFlips = 0;
             int numOfRows = i_GameBoard.GetNumberOfRows();
@@ -123,15 +129,33 @@ namespace C22_Ex02
 
             do
             {
-                randomRow = randomIndexNumber.Next(1, numOfRows);
-                randomColumn = randomIndexNumber.Next(1, numOfColumns);
-                if(IsAnUnflippedBlock(ref i_GameBoard, randomRow * 10 + randomColumn))
+                if(!IsFindAIPair(out firstAIPairBlockID, out secondAIPairBlockID))
                 {
-                    flippedBlockID.Add(randomRow * 10 + randomColumn);
-                    i_GameBoard.FlipOrUnflipBlock(flippedBlockID[numOfFlips], true);
+                    randomRow = randomIndexNumber.Next(numOfRows);
+                    randomColumn = randomIndexNumber.Next(numOfColumns);
+                    if (IsAnUnflippedBlock(ref i_GameBoard, (randomRow * 10) + randomColumn))
+                    {
+                        flippedBlockID.Add((randomRow * 10) + randomColumn);
+                        i_GameBoard.FlipOrUnflipBlock(flippedBlockID[numOfFlips], true);
+                        UI.PrintMatrix(numOfRows, numOfColumns);
+                        System.Threading.Thread.Sleep(2000);
+                        UpdateAIDictionary(flippedBlockID[0], i_GameBoard.GetMatrixGameBoard()[randomRow, randomColumn]);
+                        numOfFlips++;
+                    }
+                }
+                else
+                {
+                    flippedBlockID.Clear();
+                    flippedBlockID.Add(firstAIPairBlockID);
+                    flippedBlockID.Add(secondAIPairBlockID);
+                    System.Threading.Thread.Sleep(2000);
+                    i_GameBoard.FlipOrUnflipBlock(flippedBlockID[0], true);
                     UI.PrintMatrix(numOfRows, numOfColumns);
                     System.Threading.Thread.Sleep(2000);
-                    numOfFlips++;
+                    i_GameBoard.FlipOrUnflipBlock(flippedBlockID[1], true);
+                    UI.PrintMatrix(numOfRows, numOfColumns);
+                    System.Threading.Thread.Sleep(2000);
+                    numOfFlips = 2;
                 }
             }
             while (numOfFlips < 2);
@@ -141,10 +165,13 @@ namespace C22_Ex02
                 i_GameBoard.FlipOrUnflipBlock(flippedBlockID[0], false);
                 i_GameBoard.FlipOrUnflipBlock(flippedBlockID[1], false);
                 UI.PrintMatrix(numOfRows, numOfColumns);
+
                 return false;
             }
             else
             {
+                ClearFlippedPairFromAIMatrix(flippedBlockID[0], flippedBlockID[1]);
+
                 return true;
             }
         }

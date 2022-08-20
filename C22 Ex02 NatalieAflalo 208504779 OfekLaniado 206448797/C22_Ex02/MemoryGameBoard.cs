@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace C22_Ex02
 {
@@ -19,7 +15,7 @@ namespace C22_Ex02
         {
             m_NumOfRows = i_InputRows;
             m_NumOfColumns = i_InputColumns;
-            m_MatrixGameBoard = new char[m_NumOfRows,m_NumOfColumns];
+            m_MatrixGameBoard = new char[m_NumOfRows, m_NumOfColumns];
             m_FlippedBlocksMatrix = new bool[m_NumOfRows, m_NumOfColumns];
             m_RandomLettersCounter = new int[m_NumOfColumns * m_NumOfRows / 2];
             createRandomMatrix();
@@ -84,7 +80,7 @@ namespace C22_Ex02
             {
                 for(int j = 0; j < m_NumOfColumns; j++)
                 {
-                    if (!m_FlippedBlocksMatrix[i,j])
+                    if (!m_FlippedBlocksMatrix[i, j])
                     {
                         m_IsAllBlocksFlipped = false;
                     }

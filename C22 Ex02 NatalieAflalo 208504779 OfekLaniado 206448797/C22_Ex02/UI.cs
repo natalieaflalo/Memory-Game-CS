@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace C22_Ex02
 {
@@ -26,7 +24,7 @@ namespace C22_Ex02
                 if (s_IsPlayingAgainstComputer)
                 {
                     LogicForUI.CreatePlayers(firstPlayerName, "Computer");
-                    LogicForUI.InitiateAIMatrix(numOfRows, numOfColumns);
+                    LogicForUI.InitiateAIDictionary();
                 }
                 else
                 {
@@ -39,7 +37,6 @@ namespace C22_Ex02
 
             boardSizeCheck(ref numOfRows, ref numOfColumns);
             s_Game = new MemoryGameBoard(numOfRows, numOfColumns);
-            LogicForUI.InitiateAIMatrix(numOfRows, numOfColumns);
             PrintMatrix(numOfRows, numOfColumns);
             bool isFirstPlayerTurn = true;
             bool finishGame = false;
@@ -131,9 +128,10 @@ namespace C22_Ex02
                     Ex02.ConsoleUtils.Screen.Clear();
                     printValidationMessage(validationCode);
                 }
+
                 Console.WriteLine("The board game size must be between 4X4 and 6X6.{0}Enter board size in (rows)X(columns) format (example: 4X5):", Environment.NewLine);
                 boardSizeString = Console.ReadLine();
-                if(boardSizeString.Length !=3 || boardSizeString[1] != 'X')
+                if (boardSizeString.Length != 3 || boardSizeString[1] != 'X')
                 {
                     validationCode = eValidationOption.NotInSizeFormat;
                 }
@@ -208,23 +206,30 @@ namespace C22_Ex02
                             {
                                 s_Game.FlipOrUnflipBlock(playedBlockID[0], false);
                                 s_Game.FlipOrUnflipBlock(playedBlockID[1], false);
-                                LogicForUI.UpdateAIMatrix(playedBlockID[0], s_Game.GetMatrixGameBoard()[playedBlockID[0] / 10, playedBlockID[0] % 10]);
-                                LogicForUI.UpdateAIMatrix(playedBlockID[1], s_Game.GetMatrixGameBoard()[playedBlockID[1] / 10, playedBlockID[1] % 10]);
+                                if(s_IsPlayingAgainstComputer)
+                                {
+                                    LogicForUI.UpdateAIDictionary(playedBlockID[0], s_Game.GetMatrixGameBoard()[playedBlockID[0] / 10, playedBlockID[0] % 10]);
+                                    LogicForUI.UpdateAIDictionary(playedBlockID[1], s_Game.GetMatrixGameBoard()[playedBlockID[1] / 10, playedBlockID[1] % 10]);
+                                }
+                                
                                 System.Threading.Thread.Sleep(2000);
                                 PrintMatrix(i_NumOfRows, i_NumOfColumns);
 
                                 return false;
                             }
 
-                            LogicForUI.ClearFlippedPairFromAIMatrix(playedBlockID[0], playedBlockID[1]);
+                            if (s_IsPlayingAgainstComputer)
+                            {
+                                LogicForUI.ClearFlippedPairFromAIMatrix(playedBlockID[0], playedBlockID[1]);
+                            }
 
                             return true;
                         }
                     }
                     else
                     {
-                        printValidationMessage(validationCode);
                         PrintMatrix(i_NumOfRows, i_NumOfColumns);
+                        printValidationMessage(validationCode);
                     }
                 }
             }
@@ -240,9 +245,9 @@ namespace C22_Ex02
 
             if (i_PlayerInput.Length == 2)
             {
-                if (i_PlayerInput[0] >= 'A' && i_PlayerInput[0] <= 'A' + i_NumOfColumns)
+                if (i_PlayerInput[0] >= 'A' && i_PlayerInput[0] < 'A' + i_NumOfColumns)
                 {
-                    if (i_PlayerInput[1] >= '1' && i_PlayerInput[1] <= '1' + i_NumOfRows)
+                    if (i_PlayerInput[1] >= '1' && i_PlayerInput[1] < '1' + i_NumOfRows)
                     {
                         blockID = convertValidBlockIDToInt(i_PlayerInput);
                         if (LogicForUI.IsAnUnflippedBlock(ref s_Game, blockID))
@@ -300,15 +305,18 @@ namespace C22_Ex02
                 playerInput = Console.ReadLine();
             }
 
-            if(playerInput == "Y" || playerInput == "y")
+            if (playerInput == "Y" || playerInput == "y")
             {
                 s_IsFirstGame = false;
+                if (s_IsPlayingAgainstComputer)
+                {
+                    LogicForUI.InitiateAIDictionary();
+                }
+
                 PlayGame();
             }
-            else
-            {
-                o_FinishGame = true;
-            }
+            
+            o_FinishGame = true;
         }
 
         public static void PrintMatrix(int i_InputNumOfRows, int i_InputNumOfColumns)
