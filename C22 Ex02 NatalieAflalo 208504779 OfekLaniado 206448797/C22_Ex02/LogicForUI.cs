@@ -10,11 +10,22 @@ namespace C22_Ex02
     {
         private static Player s_FirstPlayer;
         private static Player s_SecondPlayer;
+        private static char[,] m_AIMatrix;
+        private static int m_NumOfRows;
+        private static int m_NumOfColumns;
+
 
         public static void CreatePlayers(string i_FirstName, string i_SecondName)
         {
             s_FirstPlayer = new Player(i_FirstName);
             s_SecondPlayer = new Player(i_SecondName);
+        }
+
+        public static void InitiateAIMatrix(int i_NumOfRows, int i_NumOfColumns)
+        {
+            m_NumOfRows = i_NumOfRows;
+            m_NumOfColumns = i_NumOfColumns;
+            m_AIMatrix = new char[i_NumOfRows, i_NumOfColumns];
         }
 
         public static Player GetFirstPlayer()
@@ -25,6 +36,35 @@ namespace C22_Ex02
         public static Player GetSecondPlayer()
         {
             return s_SecondPlayer;
+        }
+
+        public static void UpdateAIMatrix(int i_BlockID, char i_ValueInMatrix)
+        {
+            m_AIMatrix[i_BlockID / 10, i_BlockID % 10] = i_ValueInMatrix;
+        }
+
+        public static bool FindAIMatch(ref int o_FirstRowIndex, ref int o_FirstColumnIndex, ref int o_SecondRowIndex, ref int o_SecondColumnIndex)
+        {
+            int[] countDuplicates = new int[m_NumOfRows * m_NumOfColumns / 2];
+
+            for(int i = 0; i < m_NumOfRows; i++)
+            {
+                for (int j = 0; j < m_NumOfColumns; j++)
+                {
+                    if(m_AIMatrix[i, j] != '\0')
+                    {
+                        countDuplicates[m_AIMatrix[i, j] - 'A']++;
+                    }
+                }
+            }
+
+            for(int k = 0; k < m_NumOfRows * m_NumOfColumns / 2; k++)
+            {
+                if(countDuplicates[k]==2)
+                {
+                    o_FirstColumnIndex
+                }
+            }
         }
 
         public static bool isLegalSizeOfMatrix(char i_CharRows, char i_CharColumns, ref int o_NumberOfRows, ref int o_NumberOfColumns, out eValidationOption o_ValidationCode)
@@ -82,19 +122,26 @@ namespace C22_Ex02
                 if(IsAnUnflippedBlock(ref i_GameBoard, randomRow * 10 + randomColumn))
                 {
                     flippedBlockID.Add(randomRow * 10 + randomColumn);
+                    i_GameBoard.FlipOrUnflipBlock(flippedBlockID[numOfFlips], true);
+                    UI.PrintMatrix(numOfRows, numOfColumns);
+                    System.Threading.Thread.Sleep(2000);
                     numOfFlips++;
                 }
             }
             while (numOfFlips < 2);
 
-            i_GameBoard.FlipOrUnflipBlock(flippedBlockID[0], true);
-            UI.PrintMatrix(numOfRows, numOfColumns);
-            System.Threading.Thread.Sleep(2000);
-            i_GameBoard.FlipOrUnflipBlock(flippedBlockID[1], true);
-            UI.PrintMatrix(numOfRows, numOfColumns);
-            System.Threading.Thread.Sleep(2000);
-
-            return IsGoodPair(i_GameBoard, flippedBlockID[0], flippedBlockID[1]);        }
+            if(!IsGoodPair(i_GameBoard, flippedBlockID[0], flippedBlockID[1]))
+            {
+                i_GameBoard.FlipOrUnflipBlock(flippedBlockID[0], false);
+                i_GameBoard.FlipOrUnflipBlock(flippedBlockID[1], false);
+                UI.PrintMatrix(numOfRows, numOfColumns);
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
 
         public static bool IsGoodPair(MemoryGameBoard i_GameBoard, int i_FirstBlockID, int i_SecondBlockID)
         {

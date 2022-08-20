@@ -26,6 +26,7 @@ namespace C22_Ex02
                 if (s_IsPlayingAgainstComputer)
                 {
                     LogicForUI.CreatePlayers(firstPlayerName, "Computer");
+                    LogicForUI.InitiateAIMatrix(numOfRows, numOfColumns);
                 }
                 else
                 {
@@ -59,11 +60,13 @@ namespace C22_Ex02
                 {
                     if(s_IsPlayingAgainstComputer)
                     {
-                        Console.WriteLine("Computer's Turn:");
                         if (!LogicForUI.ComputerTurn(ref s_Game))
                         {
                             isFirstPlayerTurn = true;
-                            PrintMatrix(numOfRows, numOfColumns);
+                        }
+                        else
+                        {
+                            LogicForUI.GetSecondPlayer().UpdateScore();
                         }
                     }
                     else
@@ -281,12 +284,11 @@ namespace C22_Ex02
 
         private static void doneGame(ref bool o_FinishGame)
         {
-            Console.WriteLine("Game Over!{0}The result is: {1} If you want to finish the game enter q,Q,n or N. If you want to play a new game enter Y or y:", Environment.NewLine, LogicForUI.GetGameResult());
-            //add printing of scores
+            Console.WriteLine("Game Over!{0}The result is: {1}If you want to finish the game enter q,Q,n or N. If you want to play a new game enter Y or y:", Environment.NewLine, LogicForUI.GetGameResult());
             string playerInput = Console.ReadLine();
             string validInputOptions = "YyNnQq";
             
-            while(playerInput.Length != 1 || validInputOptions.Contains(playerInput))
+            while(playerInput.Length != 1 || !validInputOptions.Contains(playerInput))
             {
                 Ex02.ConsoleUtils.Screen.Clear();
                 Console.WriteLine("The input is not valid. Enter Y or y to start a new game, enter N or n to finish the game:");
@@ -295,7 +297,6 @@ namespace C22_Ex02
 
             if(playerInput == "Y" || playerInput == "y")
             {
-                o_FinishGame = false;
                 s_IsFirstGame = false;
                 PlayGame();
             }
@@ -307,45 +308,39 @@ namespace C22_Ex02
 
         public static void PrintMatrix(int i_InputNumOfRows, int i_InputNumOfColumns)
         {
-            char letter = 'A';
-            int number = 1;
-            char[,] letterMatrix = s_Game.GetMatrixGameBoard();
-            bool[,] flippedMatrix = s_Game.GetMatrixFlippedBlocks();
+            int amountOfEqualSigns = (i_InputNumOfColumns * 4) + 1;
+            string equalLine = string.Format("  {0}", new string('=', amountOfEqualSigns));
 
             Ex02.ConsoleUtils.Screen.Clear();
-            for (int i = 0; i < (i_InputNumOfRows + 1) * 2; i++)
+            StringBuilder topRowToPrint = new StringBuilder(" ");
+
+            for (int i = 0; i < i_InputNumOfColumns; i++)
             {
-                for (int j = 0; j < (i_InputNumOfColumns + 1) * 2; j++)
-                {
-                    if (i == 0 && j == 0)
-                    {
-                        Console.Write(string.Format("         "));
-                    }
-                    else if (i == 0 && j % 2 == 0)
-                    {
-                        Console.Write(Convert.ToChar(letter) + "            ");
-                        letter++;
-                    }
-                    else if (i != 0 && i % 2 == 0 && j == 0)
-                    {
-                        Console.Write("  " + number);
-                        number++;
-                    }
-                    else if (i % 2 != 0)
-                    {
-                        Console.Write(string.Format("======"));
-                    }
-                    else if (i > 0 && i % 2 == 0 && j % 2 != 0)
-                    {
-                        Console.Write(string.Format("  | "));
-                    }
-                    else if (i > 0)
-                    {
-                        Console.Write(string.Format("        "));
-                    }
-                }
-                Console.Write(Environment.NewLine + Environment.NewLine);
+                topRowToPrint.Append(string.Format("   {0}", (char)(i + 'A')));
             }
+
+            Console.WriteLine(topRowToPrint.ToString());
+            Console.WriteLine(equalLine);
+
+            for (int i = 0; i < i_InputNumOfRows; i++)
+            {
+                string beginningOfRow = string.Format("{0} |", i + 1);
+
+                Console.Write(beginningOfRow);
+
+                for (int j = 0; j < i_InputNumOfColumns; j++)
+                {
+                    bool isFlippedLetter = s_Game.GetMatrixFlippedBlocks()[i, j];
+                    string blockToProint = string.Format(" {0} |", isFlippedLetter ? s_Game.GetMatrixGameBoard()[i, j] : ' ');
+
+                    Console.Write(blockToProint);
+                }
+
+                Console.WriteLine();
+                Console.WriteLine(equalLine);
+            }
+
+            Console.WriteLine();
         }
     }
 }
