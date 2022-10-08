@@ -6,18 +6,18 @@ namespace C22_Ex02
     {
         private int m_NumOfColumns;
         private int m_NumOfRows;
-        private char[,] m_MatrixGameBoard;
-        private bool[,] m_FlippedBlocksMatrix;
-        private int[] m_RandomLettersCounter;
+        private readonly char[,] r_MatrixGameBoard;
+        private readonly bool[,] r_FlippedBlocksMatrix;
+        private readonly int[] r_RandomLettersCounter;
         private bool m_IsAllBlocksFlipped;
 
         public MemoryGameBoard(int i_InputRows, int i_InputColumns)
         {
             m_NumOfRows = i_InputRows;
             m_NumOfColumns = i_InputColumns;
-            m_MatrixGameBoard = new char[m_NumOfRows, m_NumOfColumns];
-            m_FlippedBlocksMatrix = new bool[m_NumOfRows, m_NumOfColumns];
-            m_RandomLettersCounter = new int[m_NumOfColumns * m_NumOfRows / 2];
+            r_MatrixGameBoard = new char[m_NumOfRows, m_NumOfColumns];
+            r_FlippedBlocksMatrix = new bool[m_NumOfRows, m_NumOfColumns];
+            r_RandomLettersCounter = new int[m_NumOfColumns * m_NumOfRows / 2];
             createRandomMatrix();
         }
 
@@ -31,14 +31,14 @@ namespace C22_Ex02
             { 
                 for (int currentColumn = 0; currentColumn < m_NumOfColumns; currentColumn++)
                 {
-                    while (m_MatrixGameBoard[currentRow, currentColumn] == '\0')
+                    while (r_MatrixGameBoard[currentRow, currentColumn] == '\0')
                     {
                         randomChar = (char)rndCharForMatrix.Next(65, 65 + (m_NumOfColumns * m_NumOfRows / 2));
 
-                        if (m_RandomLettersCounter[((int)randomChar) - 65] < 2)
+                        if (r_RandomLettersCounter[((int)randomChar) - 65] < 2)
                         {
-                            m_RandomLettersCounter[((int)randomChar) - 65]++;
-                            m_MatrixGameBoard[currentRow, currentColumn] = randomChar;
+                            r_RandomLettersCounter[((int)randomChar) - 65]++;
+                            r_MatrixGameBoard[currentRow, currentColumn] = randomChar;
                             counterOfCorrectValuesInMatrix++;
                         }
                     }
@@ -58,17 +58,17 @@ namespace C22_Ex02
 
         public char[,] GetMatrixGameBoard()
         {
-            return m_MatrixGameBoard;
+            return r_MatrixGameBoard;
         }
 
         public bool[,] GetMatrixFlippedBlocks()
         {
-            return m_FlippedBlocksMatrix;
+            return r_FlippedBlocksMatrix;
         }
 
         public void FlipOrUnflipBlock(int i_MatrixIndex, bool i_IsFlip)
         {
-            m_FlippedBlocksMatrix[i_MatrixIndex / 10, i_MatrixIndex % 10] = i_IsFlip;
+            r_FlippedBlocksMatrix[i_MatrixIndex / 10, i_MatrixIndex % 10] = i_IsFlip;
             isAllBlocksFlipped();
         }
 
@@ -80,7 +80,7 @@ namespace C22_Ex02
             {
                 for(int j = 0; j < m_NumOfColumns; j++)
                 {
-                    if (!m_FlippedBlocksMatrix[i, j])
+                    if (!r_FlippedBlocksMatrix[i, j])
                     {
                         m_IsAllBlocksFlipped = false;
                     }

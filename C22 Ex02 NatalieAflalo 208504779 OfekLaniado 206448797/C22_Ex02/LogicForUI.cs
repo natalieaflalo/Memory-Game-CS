@@ -54,6 +54,10 @@ namespace C22_Ex02
 
         public static bool IsFindAIPair(out int o_FirstBlockID, out int o_SecondBlockID)
         {
+            bool isFindAIPair = false;
+            o_FirstBlockID = -1;
+            o_SecondBlockID = -1;
+
             foreach (KeyValuePair<int, char> firstBlockFromMemory in s_AIMemoryDict)
             {
                 foreach (KeyValuePair<int, char> secondBlockFromMemory in s_AIMemoryDict)
@@ -64,30 +68,26 @@ namespace C22_Ex02
                         {
                             o_FirstBlockID = firstBlockFromMemory.Key;
                             o_SecondBlockID = secondBlockFromMemory.Key;
-
-                            return true;
+                            isFindAIPair = true;
                         }
                     }
                 }
             }
 
-            o_FirstBlockID = -1;
-            o_SecondBlockID = -1;
-
-            return false;
+            return isFindAIPair;
         }
 
-        public static bool IsLegalSizeOfMatrix(char i_CharRows, char i_CharColumns, ref int o_NumberOfRows, ref int o_NumberOfColumns, out eValidationOption o_ValidationCode)
+        public static bool IsLegalSizeOfMatrix(char i_CharRows, char i_CharColumns, ref int io_NumberOfRows, ref int io_NumberOfColumns, out eValidationOption o_ValidationCode)
         {
             bool isLegal = false;
 
-            if (int.TryParse(i_CharRows.ToString(), out o_NumberOfRows) && int.TryParse(i_CharColumns.ToString(), out o_NumberOfColumns))
+            if (int.TryParse(i_CharRows.ToString(), out io_NumberOfRows) && int.TryParse(i_CharColumns.ToString(), out io_NumberOfColumns))
             {
-                if(o_NumberOfRows <= 6 && o_NumberOfColumns <= 6)
+                if(io_NumberOfRows <= 6 && io_NumberOfColumns <= 6)
                 {
-                    if(o_NumberOfRows >= 4 && o_NumberOfColumns >= 4)
+                    if(io_NumberOfRows >= 4 && io_NumberOfColumns >= 4)
                     {
-                        if((o_NumberOfRows * o_NumberOfColumns) % 2 == 0)
+                        if((io_NumberOfRows * io_NumberOfColumns) % 2 == 0)
                         {
                             isLegal = true;
                             o_ValidationCode = eValidationOption.Valid;
@@ -126,6 +126,7 @@ namespace C22_Ex02
             int numOfFlips = 0;
             int numOfRows = io_GameBoard.GetNumberOfRows();
             int numOfColumns = io_GameBoard.GetNumberOfColumns();
+            bool isComputerTurn;
 
             do
             {
@@ -166,14 +167,21 @@ namespace C22_Ex02
                 io_GameBoard.FlipOrUnflipBlock(flippedBlockID[1], false);
                 UI.PrintMatrix(numOfRows, numOfColumns);
 
-                return false;
+                isComputerTurn = false;
             }
             else
             {
                 ClearFlippedPairFromAIMatrix(flippedBlockID[0], flippedBlockID[1]);
 
-                return true;
+                isComputerTurn = true;
             }
+
+            if (io_GameBoard.GetIsAllBlocksFlipped())
+            {
+                isComputerTurn = false;
+            }
+
+            return isComputerTurn;
         }
 
         public static bool IsGoodPair(MemoryGameBoard i_GameBoard, int i_FirstBlockID, int i_SecondBlockID)

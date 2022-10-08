@@ -115,7 +115,7 @@ namespace C22_Ex02
             return isPlayingAgainsComputer;
         }
 
-        private static void boardSizeCheck(ref int o_NumOfRows, ref int o_NumOfColumns)
+        private static void boardSizeCheck(ref int io_NumOfRows, ref int io_NumOfColumns)
         {
             bool isValidBoard = false;
             eValidationOption validationCode = eValidationOption.Undefined;
@@ -137,7 +137,7 @@ namespace C22_Ex02
                 }
                 else
                 {
-                    isValidBoard = LogicForUI.IsLegalSizeOfMatrix(boardSizeString[0], boardSizeString[2], ref o_NumOfRows, ref o_NumOfColumns, out validationCode);
+                    isValidBoard = LogicForUI.IsLegalSizeOfMatrix(boardSizeString[0], boardSizeString[2], ref io_NumOfRows, ref io_NumOfColumns, out validationCode);
                 }
             }
             while (!isValidBoard);
